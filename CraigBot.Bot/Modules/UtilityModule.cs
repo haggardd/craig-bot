@@ -14,7 +14,7 @@ namespace CraigBot.Bot.Modules
     {
         #region Commands
 
-        // TODO: Could benefit from added more fields, maybe...
+        // TODO: Could benefit from added more fields, i.e. current game / music, etc...
         [Command("inspect")] 
         [Summary("Displays information about the give user.")]
         public async Task InspectUser(SocketGuildUser user)

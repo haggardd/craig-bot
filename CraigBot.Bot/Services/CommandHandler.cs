@@ -46,8 +46,21 @@ namespace CraigBot.Bot.Services
 
                 if (!result.IsSuccess)
                 {
-                    // TODO: The current error messages are very user friendly, think of way to fix this
-                    await context.Channel.SendMessageAsync(result.ToString());
+                    // TODO: May need to add to this as more commands are added, we'll see...
+                    switch (result.Error)
+                    {
+                        case CommandError.UnknownCommand:
+                            await context.Channel.SendMessageAsync(
+                                "Unknown command! Make sure you're typing the correct command syntax, use '!help' for a list of all commands.");
+                            break;
+                        case CommandError.BadArgCount:
+                            await context.Channel.SendMessageAsync(
+                                "Incorrect arguments! You might be using the incorrect amount of arguments, use '!help' for a list of all commands and their arguments.");
+                            break;
+                        default:
+                            await context.Channel.SendMessageAsync(result.ToString());
+                            break;
+                    }
                 }
             }
         }

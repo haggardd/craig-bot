@@ -22,7 +22,6 @@ namespace CraigBot.Bot.Modules
         #region Commands
         
         // TODO: Need to have a think about how commands are currently grouped, when to use optional parameters and how to relay this information to the user
-        // TODO: Should include the summary and arguments to distinguish varieties of the same command
         [Command]
         public async Task Help()
         {
@@ -30,7 +29,7 @@ namespace CraigBot.Bot.Modules
             // TODO: Change these embed builders to use the methods opposed to properties
             var footer = new EmbedFooterBuilder()
             {
-                Text = "Craig Bot, Brought to you by Discord.Net <3 - www.georgeblackwell.dev",
+                Text = "Craig Bot, Brought to you by Discord.Net <3 / www.georgeblackwell.dev",
                 IconUrl = "https://cdn.jsdelivr.net/gh/discord-net/Discord.Net/docs/marketing/logo/PackageLogo.png"
             };
             var embed = new EmbedBuilder()
