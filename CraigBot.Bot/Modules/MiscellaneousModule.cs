@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 
 namespace CraigBot.Bot.Modules
@@ -52,9 +54,69 @@ namespace CraigBot.Bot.Modules
         // TODO: Create an overload for taking specific usernames
         [Command("avatar")]
         [Summary("Replies with the user's avatar.")]
-        [Remarks("test")]
         public async Task Avatar()
             => await ReplyAsync(Context.User.GetAvatarUrl());
+
+        /*
+         * TODO: Finish implementing this
+         * Things to consider:
+         *  - Check who has already voted
+         *  - Update original poll message with winner
+         *  - Send new message with winner
+         */
+        [Command("poll")]
+        [Summary("Creates a channel wide polls with a set duration and up to 10 options.")]
+        public async Task Poll(string question, int duration, params string[] options)
+        {
+            if (options.Length <= 1 || options.Length > 10)
+            {
+                await ReplyAsync("To start a poll you need between 2 and 10 options to choose from.");
+                return;
+            }
+
+            var embed = new EmbedBuilder()
+                .WithColor(Color.Gold)
+                .WithTitle(question)
+                .WithAuthor(Context.User)
+                .WithFooter(f => f.Text = $"Poll ends {duration} seconds from message sent")
+                .WithCurrentTimestamp();
+            
+            string optionsText = null;
+            
+            for (var i = 0; i < options.Length; i++)
+            {
+                optionsText += $"`{i + 1})` {options[i]} \n";
+            }
+            
+            embed.AddField("Options: ", optionsText);
+            
+            var pollMessage = await ReplyAsync("", false, embed.Build());
+            var emotes = _emoteNumbers;
+            
+            for (var i = 0; i < options.Length; i++)
+            {
+                await pollMessage.AddReactionAsync(emotes[i]);
+            }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        // TODO: There's probably a better way to store these...
+        private readonly List<IEmote> _emoteNumbers = new List<IEmote>
+        {
+            new Emoji("\u0031\u20E3"),
+            new Emoji("\u0032\u20E3"),
+            new Emoji("\u0033\u20E3"),
+            new Emoji("\u0034\u20E3"),
+            new Emoji("\u0035\u20E3"),
+            new Emoji("\u0036\u20E3"),
+            new Emoji("\u0037\u20E3"),
+            new Emoji("\u0038\u20E3"),
+            new Emoji("\u0039\u20E3"),
+            new Emoji("\uD83D\uDD1F")
+        };
 
         #endregion
     }
