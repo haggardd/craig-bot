@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 
 namespace CraigBot.Bot.Modules
 {
@@ -50,19 +51,19 @@ namespace CraigBot.Bot.Modules
 
             await ReplyAsync($"Its {choice}!");
         }
-        
-        // TODO: Create an overload for taking specific usernames
+
         [Command("avatar")]
         [Summary("Replies with the user's avatar.")]
-        public async Task Avatar()
-            => await ReplyAsync(Context.User.GetAvatarUrl());
+        public async Task Avatar(SocketGuildUser user = null)
+            => await (user != null
+                ? ReplyAsync(user.GetAvatarUrl())
+                : ReplyAsync(Context.User.GetAvatarUrl()));
 
         /*
          * TODO: Finish implementing this
          * Things to consider:
+         *  - Calculate votes (this is proving to be tricky!)
          *  - Check who has already voted
-         *  - Update original poll message with winner
-         *  - Send new message with winner
          */
         [Command("poll")]
         [Summary("Creates a channel wide polls with a set duration and up to 10 options.")]
@@ -74,7 +75,7 @@ namespace CraigBot.Bot.Modules
                 return;
             }
 
-            var embed = new EmbedBuilder()
+            var pollEmbed = new EmbedBuilder()
                 .WithColor(Color.Gold)
                 .WithTitle(question)
                 .WithAuthor(Context.User)
@@ -88,15 +89,26 @@ namespace CraigBot.Bot.Modules
                 optionsText += $"`{i + 1})` {options[i]} \n";
             }
             
-            embed.AddField("Options: ", optionsText);
+            pollEmbed.AddField("Options: ", optionsText);
             
-            var pollMessage = await ReplyAsync("", false, embed.Build());
+            var pollMessage = await ReplyAsync("Vote Now!", false, pollEmbed.Build());
             var emotes = _emoteNumbers;
             
             for (var i = 0; i < options.Length; i++)
             {
                 await pollMessage.AddReactionAsync(emotes[i]);
             }
+
+            await Task.Delay(duration * 1000);
+
+            var pollEndEmbed = new EmbedBuilder()
+                .WithColor(Color.Gold)
+                .WithTitle("Poll Over!")
+                .WithDescription(question)
+                .AddField("Most Votes Received: ", options[0])
+                .WithAuthor(Context.User);
+            
+            await ReplyAsync("", false, pollEndEmbed.Build());
         }
 
         #endregion

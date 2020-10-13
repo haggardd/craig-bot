@@ -9,18 +9,18 @@ namespace CraigBot.Bot.Services
     public class CommandHandler
     {
         private readonly DiscordSocketClient _discord;
-        private readonly CommandService _commands;
+        private readonly CommandService _commandService;
         private readonly IConfigurationRoot _config;
         private readonly IServiceProvider _provider;
 
         public CommandHandler(
             DiscordSocketClient discord,
-            CommandService commands,
+            CommandService commandService,
             IConfigurationRoot config,
             IServiceProvider provider)
         {
             _discord = discord;
-            _commands = commands;
+            _commandService = commandService;
             _config = config;
             _provider = provider;
 
@@ -42,11 +42,12 @@ namespace CraigBot.Bot.Services
             if (message.HasStringPrefix(_config["prefix"], ref argPos) ||
                 message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
             {
-                var result = await _commands.ExecuteAsync(context, argPos, _provider);
+                var result = await _commandService.ExecuteAsync(context, argPos, _provider);
 
                 if (!result.IsSuccess)
                 {
-                    // TODO: May need to add to this as more commands are added, we'll see...
+                    // TODO: Bad code! Take a look at the docs!
+                    // https://discord.foxbot.me/docs/guides/commands/post-execution.html
                     switch (result.Error)
                     {
                         case CommandError.UnknownCommand:

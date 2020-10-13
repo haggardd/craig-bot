@@ -10,20 +10,20 @@ namespace CraigBot.Bot.Services
     public class LoggingService
     {
         private readonly DiscordSocketClient _discord;
-        private readonly CommandService _commands;
+        private readonly CommandService _commandService;
         
         private string LogDirectory { get; }
         private string LogFile => Path.Combine(LogDirectory, $"{DateTime.UtcNow:yyyy-MM-dd}.txt");
 
-        public LoggingService(DiscordSocketClient discord, CommandService commands)
+        public LoggingService(DiscordSocketClient discord, CommandService commandService)
         {
             LogDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
 
             _discord = discord;
-            _commands = commands;
+            _commandService = commandService;
 
             _discord.Log += OnLogAsync;
-            _commands.Log += OnLogAsync;
+            _commandService.Log += OnLogAsync;
         }
 
         private Task OnLogAsync(LogMessage message)

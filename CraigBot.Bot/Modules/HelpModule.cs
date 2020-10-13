@@ -10,12 +10,12 @@ namespace CraigBot.Bot.Modules
     [Summary("Help Commands")]
     public class HelpModule : ModuleBase<SocketCommandContext>
     {
-        private readonly CommandService _commands;
+        private readonly CommandService _commandService;
         private readonly IConfigurationRoot _config;
     
-        public HelpModule(CommandService commands, IConfigurationRoot config)
+        public HelpModule(CommandService commandService, IConfigurationRoot config)
         {
-            _commands = commands;
+            _commandService = commandService;
             _config = config;
         }
 
@@ -26,21 +26,17 @@ namespace CraigBot.Bot.Modules
         public async Task Help()
         {
             var prefix = _config["prefix"];
-            // TODO: Change these embed builders to use the methods opposed to properties
-            var footer = new EmbedFooterBuilder()
-            {
-                Text = "Craig Bot, Brought to you by Discord.Net <3 / www.georgeblackwell.dev",
-                IconUrl = "https://cdn.jsdelivr.net/gh/discord-net/Discord.Net/docs/marketing/logo/PackageLogo.png"
-            };
             var embed = new EmbedBuilder()
-            {
-                Color = new Color(114, 137, 218),
-                Title = "All Commands:",
-                Description = "Below is a list of all current commands. Some may be restricted based on your role.",
-                Footer = footer
-            };
+                .WithColor(Color.Blue)
+                .WithTitle("All Commands: ")
+                .WithDescription("Below is a list of all current commands. Some may be restricted based on your role.")
+                .WithFooter(f =>
+                {
+                    f.Text = "Craig Bot, Brought to you by Discord.Net <3 / www.georgeblackwell.dev";
+                    f.IconUrl = "https://cdn.jsdelivr.net/gh/discord-net/Discord.Net/docs/marketing/logo/PackageLogo.png";
+                });
 
-            foreach (var module in _commands.Modules)
+            foreach (var module in _commandService.Modules)
             {
                 string description = null;
 
@@ -56,11 +52,11 @@ namespace CraigBot.Bot.Modules
 
                 if (!string.IsNullOrWhiteSpace(description))
                 {
-                    embed.AddField(x =>
+                    embed.AddField(f =>
                     {
-                        x.Name = module.Summary;
-                        x.Value = description;
-                        x.IsInline = false;
+                        f.Name = module.Summary;
+                        f.Value = description;
+                        f.IsInline = false;
                     });
                 }
             }
