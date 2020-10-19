@@ -22,11 +22,11 @@ namespace CraigBot.Bot.Services
             _discord = discord;
             _commandService = commandService;
 
-            _discord.Log += OnLogAsync;
-            _commandService.Log += OnLogAsync;
+            _discord.Log += OnLog;
+            _commandService.Log += OnLog;
         }
 
-        private Task OnLogAsync(LogMessage message)
+        private Task OnLog(LogMessage message)
         {
             if (!Directory.Exists(LogDirectory))
             {

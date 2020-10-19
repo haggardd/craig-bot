@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
@@ -24,10 +25,11 @@ namespace CraigBot.Bot.Services
             _config = config;
             _provider = provider;
 
-            _discord.MessageReceived += OnMessageReceivedAsync;
+            _discord.MessageReceived += OnMessageReceived;
+            _commandService.CommandExecuted += OnCommandExecuted;
         }
 
-        private async Task OnMessageReceivedAsync(SocketMessage socketMessage)
+        private async Task OnMessageReceived(SocketMessage socketMessage)
         {
             var message = socketMessage as SocketUserMessage;
 
@@ -36,34 +38,48 @@ namespace CraigBot.Bot.Services
                 return;
             }
             
-            var context = new SocketCommandContext(_discord, message);
             var argPos = 0;
-
-            if (message.HasStringPrefix(_config["prefix"], ref argPos) ||
+            
+            if (!message.HasStringPrefix(_config["prefix"], ref argPos) ||
                 message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
             {
-                var result = await _commandService.ExecuteAsync(context, argPos, _provider);
+                return;
+            }
+            
+            var context = new SocketCommandContext(_discord, message);
+            await _commandService.ExecuteAsync(context, argPos, _provider);
+        }
 
-                if (!result.IsSuccess)
+        private async Task OnCommandExecuted(Optional<CommandInfo> command, ICommandContext context, IResult result)
+        {
+            if (result?.Error != null)
+            {
+                switch (result.Error)
                 {
-                    // TODO: Bad code! Take a look at the docs!
-                    // https://discord.foxbot.me/docs/guides/commands/post-execution.html
-                    switch (result.Error)
-                    {
-                        case CommandError.UnknownCommand:
-                            await context.Channel.SendMessageAsync(
-                                "Unknown command! Make sure you're typing the correct command syntax, use '!help' for a list of all commands.");
-                            break;
-                        case CommandError.BadArgCount:
-                            await context.Channel.SendMessageAsync(
-                                "Incorrect arguments! You might be using the incorrect amount of arguments, use '!help' for a list of all commands and their arguments.");
-                            break;
-                        default:
-                            await context.Channel.SendMessageAsync(result.ToString());
-                            break;
-                    }
+                    case CommandError.UnknownCommand:
+                        await context.Channel.SendMessageAsync(
+                            "Unknown command! Make sure you're typing the correct command syntax, use `!help` for a list of all commands.");
+                        break;
+                    case CommandError.BadArgCount:
+                        await context.Channel.SendMessageAsync(
+                            "Incorrect arguments! You might be using the incorrect amount of arguments, use `!help` for a list of all commands and their arguments.");
+                        break;
+                    default:
+                        await context.Channel.SendMessageAsync(result.ToString());
+                        break;
                 }
             }
+            
+            // TODO: Might be a good idea to add some logging here
+        }
+    }
+
+    // TODO: May want to separate this out into its own file
+    // TODO: Expand on this so it can actually be used
+    public class CustomRuntimeResult : RuntimeResult
+    {
+        public CustomRuntimeResult(CommandError? error, string reason) : base(error, reason)
+        {
         }
     }
 }

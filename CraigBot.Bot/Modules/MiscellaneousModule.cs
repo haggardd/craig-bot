@@ -7,7 +7,6 @@ using Discord.WebSocket;
 
 namespace CraigBot.Bot.Modules
 {
-    [Group("misc")]
     [Summary("Miscellaneous Commands")]
     public class MiscellaneousModule : ModuleBase<SocketCommandContext>
     {
@@ -20,6 +19,15 @@ namespace CraigBot.Bot.Modules
 
         #region Commands
 
+        // TODO: Check if its a good idea to validate parameters in the commands or in the command service
+        // TODO: Would be nice to allow the user to pass the channel they want the bot to say it in (behind permissions maybe?)
+        [Command("say")]
+        [Summary("Echoes a given piece of text.")]
+        public async Task Say([Remainder]string text = null)
+            => await (string.IsNullOrWhiteSpace(text) 
+                ? ReplyAsync("You need to give me something to say!")
+                : ReplyAsync(text));
+        
         [Command("roll")]
         [Summary("Rolls a 6 sided die.")]
         public async Task Roll()
@@ -32,15 +40,19 @@ namespace CraigBot.Bot.Modules
             => await (size <= 0
                 ? ReplyAsync("That's not how dice work. Try again.")
                 : ReplyAsync($"Its {_random.Next(size) + 1}!"));
-
-        // TODO: Allow for more than 2 choices
+        
         [Command("choose")]
-        [Summary("Makes a choice between two given options.")]
-        public async Task Choose(string choiceOne, string choiceTwo)
+        [Summary("Makes a choice from a selection of given options.")]
+        public async Task Choose(params string[] choices)
         {
-            var choice = _random.Next(2) == 0 ? choiceOne : choiceTwo;
+            if (choices.Length <= 1)
+            {
+                await ReplyAsync("I need at least two choices to make a decision!");
+                return;
+            }
             
-            await ReplyAsync($"I choose {choice}!");
+            var randomIndex = _random.Next(choices.Length);
+            await ReplyAsync($"I choose {choices[randomIndex]}!");
         }
         
         [Command("flip")]
@@ -58,15 +70,13 @@ namespace CraigBot.Bot.Modules
             => await (user != null
                 ? ReplyAsync(user.GetAvatarUrl())
                 : ReplyAsync(Context.User.GetAvatarUrl()));
-
-        /*
-         * TODO: Finish implementing this
-         * Things to consider:
-         *  - Calculate votes (this is proving to be tricky!)
-         *  - Check who has already voted
-         */
+        
+        // TODO: Finish implementing this
+        /* Things to consider:
+        *  - Calculate votes (this is proving to be tricky!)
+        *  - Check who has already voted */
         [Command("poll")]
-        [Summary("Creates a channel wide polls with a set duration and up to 10 options.")]
+        [Summary("Creates a channel wide poll with a set duration and up to 10 options.")]
         public async Task Poll(string question, int duration, params string[] options)
         {
             if (options.Length <= 1 || options.Length > 10)
