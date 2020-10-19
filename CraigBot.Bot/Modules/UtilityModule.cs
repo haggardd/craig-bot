@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -7,16 +8,15 @@ using Discord.WebSocket;
 
 namespace CraigBot.Bot.Modules
 {
-    [Group("util")]
     [Summary("Utility Commands")]
-    [RequireContext(ContextType.Guild)]
     public class UtilityModule : ModuleBase<SocketCommandContext>
     {
         #region Commands
 
         // TODO: Could benefit from added more fields, i.e. current game / music, etc...
+        // TODO: It's probably a good idea to check if the user exists
         [Command("inspect")] 
-        [Summary("Displays information about the give user.")]
+        [Summary("Displays information about the given user.")]
         public async Task InspectUser(SocketGuildUser user)
         {
             var joined = user.JoinedAt == null

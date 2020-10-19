@@ -6,7 +6,6 @@ using Discord.Commands;
 
 namespace CraigBot.Bot.Modules
 {
-    [Group("fun")]
     [Summary("Fun Commands")]
     public class FunModule : ModuleBase<SocketCommandContext>
     {

@@ -5,8 +5,7 @@ using Discord.Commands;
 using Microsoft.Extensions.Configuration;
 
 namespace CraigBot.Bot.Modules
-{    
-    [Group("help")]
+{
     [Summary("Help Commands")]
     public class HelpModule : ModuleBase<SocketCommandContext>
     {
@@ -21,8 +20,9 @@ namespace CraigBot.Bot.Modules
 
         #region Commands
         
-        // TODO: Need to have a think about how commands are currently grouped, when to use optional parameters and how to relay this information to the user
-        [Command]
+        // TODO: Need to have a think about how commands are currently grouped, when to use optional parameters or when to create an overload
+        [Command("help")]
+        [Summary("Displays a list of all commands.")]
         public async Task Help()
         {
             var prefix = _config["prefix"];
@@ -46,25 +46,48 @@ namespace CraigBot.Bot.Modules
 
                     if (result.IsSuccess)
                     {
-                        description += $"{prefix}{command.Aliases.First()} {string.Join(" ", command.Parameters.Select(p => $"`[{p.Name}]`"))} \n";
+                        description += $"`{prefix}{command.Aliases.First()}{string.Join("", command.Parameters.Select(p => $" [{p.Name}]"))}`\n";
                     }
                 }
 
                 if (!string.IsNullOrWhiteSpace(description))
                 {
-                    embed.AddField(f =>
-                    {
-                        f.Name = module.Summary;
-                        f.Value = description;
-                        f.IsInline = false;
-                    });
+                    embed.AddField(module.Summary, description);
                 }
             }
 
             await ReplyAsync("", false, embed.Build());
         }
         
-        // TODO: Will need to add a second command for getting more info on specific commands, i.e. !help flip etc...
+        // TODO: Relay info about parameters, if they're optional, arrays, require quotes etc...
+        // TODO: Add summaries for parameters, check docs for this, its possible!
+        // TODO: Finish this!
+        [Command("help")]
+        [Summary("Gives more information on specific commands.")]
+        public async Task Help(string command)
+        {
+            var result = _commandService.Search(Context, command);
+
+            if (!result.IsSuccess)
+            {
+                await ReplyAsync("That command doesn't seem to exist! Try `!help` for a full list of commands.");
+                return;
+            }
+            
+            var prefix = _config["prefix"];
+            var embed = new EmbedBuilder()
+                .WithColor(Color.Blue)
+                .WithTitle($"*{prefix}{command}*");
+
+            foreach (var commandMatch in result.Commands)
+            {
+                embed.AddField(
+                    $"`{prefix}{commandMatch.Command.Aliases.First()} {string.Join(" ", commandMatch.Command.Parameters.Select(p => $"[{p.Name}]"))}`", 
+                    commandMatch.Command.Summary);
+            }
+
+            await ReplyAsync("", false, embed.Build());
+        }
         
         #endregion
     }
