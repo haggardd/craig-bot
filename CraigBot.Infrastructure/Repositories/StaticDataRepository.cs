@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 
 namespace CraigBot.Infrastructure.Repositories
 {
+    // TODO: Look at replacing this with SQLite
     public class StaticDataRepository : IStaticDataRepository
     {
         public async Task<IEnumerable<string>> Get(string fileName)

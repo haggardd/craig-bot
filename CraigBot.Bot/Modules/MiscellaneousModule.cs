@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CraigBot.Bot.Common;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -18,32 +19,31 @@ namespace CraigBot.Bot.Modules
         }
 
         #region Commands
-
-        // TODO: Check if its a good idea to validate parameters in the commands or in the command service
+        
         // TODO: Would be nice to allow the user to pass the channel they want the bot to say it in (behind permissions maybe?)
         [Command("say")]
         [Summary("Echoes a given piece of text.")]
-        public async Task Say([Remainder]string text = null)
-            => await (string.IsNullOrWhiteSpace(text) 
-                ? ReplyAsync("You need to give me something to say!")
-                : ReplyAsync(text));
-        
-        [Command("roll")]
-        [Summary("Rolls a 6 sided die.")]
-        public async Task Roll()
-            => await ReplyAsync($"Its {_random.Next(6) + 1}!");
+        [Example("!say Welcome new members!")]
+        public async Task Say([Remainder][Summary("The text you wish to be repeated.")] string text)
+            => await ReplyAsync(text);
         
         // TODO: Look into preventing numbers over int.MaxValue
         [Command("roll")]
-        [Summary("Rolls a die of user defined size.")]
-        public async Task Roll(int size)
+        [Summary("Rolls a 6 sided die or a die of user defined size.")]
+        [Example("!roll")]
+        [Example("!roll 9")]
+        public async Task Roll([Summary("The size of the die you wish to roll.")] 
+            int size = 0)
             => await (size <= 0
-                ? ReplyAsync("That's not how dice work. Try again.")
+                ? ReplyAsync($"Its {_random.Next(6) + 1}!")
                 : ReplyAsync($"Its {_random.Next(size) + 1}!"));
         
         [Command("choose")]
         [Summary("Makes a choice from a selection of given options.")]
-        public async Task Choose(params string[] choices)
+        [Example("!choose cheese bread water")]
+        [Example("!choose \"cheese & water\" \"bread & beer\"")]
+        public async Task Choose([Summary("The choices you wish the Bot to choose from.")] 
+            params string[] choices)
         {
             if (choices.Length <= 1)
             {
@@ -57,6 +57,7 @@ namespace CraigBot.Bot.Modules
         
         [Command("flip")]
         [Summary("Flips a coin.")]
+        [Example("!flip")]
         public async Task Flip()
         {
             var choice = _random.Next(2) == 0 ? "heads" : "tails";
@@ -66,7 +67,10 @@ namespace CraigBot.Bot.Modules
 
         [Command("avatar")]
         [Summary("Replies with the user's avatar.")]
-        public async Task Avatar(SocketGuildUser user = null)
+        [Example("!avatar")]
+        [Example("!avatar @Craig")]
+        public async Task Avatar([Summary("The user's avatar you wish to see.")] 
+            SocketGuildUser user = null)
             => await (user != null
                 ? ReplyAsync(user.GetAvatarUrl())
                 : ReplyAsync(Context.User.GetAvatarUrl()));
@@ -77,7 +81,10 @@ namespace CraigBot.Bot.Modules
         *  - Check who has already voted */
         [Command("poll")]
         [Summary("Creates a channel wide poll with a set duration and up to 10 options.")]
-        public async Task Poll(string question, int duration, params string[] options)
+        [Example("!poll \"What shall we play?\" 10 \"CS:GO\" \"Red Dead\" \"Sea of Thieves\"")]
+        public async Task Poll([Summary("The question / choice you'd like to start a poll for.")] string question, 
+            [Summary("The amount of seconds to pass before the winner is decided.")] int duration, 
+            [Summary("The options to pick from during the poll.")] params string[] options)
         {
             if (options.Length <= 1 || options.Length > 10)
             {

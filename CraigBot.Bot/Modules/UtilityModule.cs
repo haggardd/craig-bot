@@ -1,7 +1,7 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using CraigBot.Bot.Common;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -16,8 +16,9 @@ namespace CraigBot.Bot.Modules
         // TODO: Could benefit from added more fields, i.e. current game / music, etc...
         // TODO: It's probably a good idea to check if the user exists
         [Command("inspect")] 
-        [Summary("Displays information about the given user.")]
-        public async Task InspectUser(SocketGuildUser user)
+        [Summary("Displays information about a given user.")]
+        [Example("!inspect @Craig")]
+        public async Task Inspect([Summary("The user you wish to inspect.")] SocketGuildUser user)
         {
             var joined = user.JoinedAt == null
                 ? "UNKNOWN"
@@ -37,9 +38,9 @@ namespace CraigBot.Bot.Modules
         }
         
         // TODO: Add further inspect commands for channels, servers etc...
-
         [Command("ping")]
         [Summary("A test commands, replies with 'pong'.")]
+        [Example("!ping")]
         public async Task Ping()
             => await ReplyAsync("Pong!");
 
