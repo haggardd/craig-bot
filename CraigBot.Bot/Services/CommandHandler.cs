@@ -62,7 +62,7 @@ namespace CraigBot.Bot.Services
                         break;
                     case CommandError.BadArgCount:
                         await context.Channel.SendMessageAsync(
-                            "Incorrect arguments! You might be using the incorrect amount of arguments, use `!help` for a list of all commands and their arguments.");
+                            $"Incorrect arguments! You might be using the incorrect amount of arguments or type, use `!help {command.Value.Name}` for more information about that command.");
                         break;
                     default:
                         await context.Channel.SendMessageAsync(result.ToString());
