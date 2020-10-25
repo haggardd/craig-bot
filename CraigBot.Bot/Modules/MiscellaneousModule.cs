@@ -9,6 +9,7 @@ using Discord.WebSocket;
 namespace CraigBot.Bot.Modules
 {
     [Summary("Miscellaneous Commands")]
+    [RequireContext(ContextType.Guild)]
     public class MiscellaneousModule : ModuleBase<SocketCommandContext>
     {
         private readonly Random _random;

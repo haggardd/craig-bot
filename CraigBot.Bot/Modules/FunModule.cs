@@ -8,6 +8,7 @@ using Discord.Commands;
 namespace CraigBot.Bot.Modules
 {
     [Summary("Fun Commands")]
+    [RequireContext(ContextType.Guild)]
     public class FunModule : ModuleBase<SocketCommandContext>
     {
         private readonly Random _random;

@@ -54,6 +54,8 @@ namespace CraigBot.Bot.Services
         {
             if (result?.Error != null)
             {
+                var commandName = command.Value.Name;
+                
                 switch (result.Error)
                 {
                     case CommandError.UnknownCommand:
@@ -62,7 +64,11 @@ namespace CraigBot.Bot.Services
                         break;
                     case CommandError.BadArgCount:
                         await context.Channel.SendMessageAsync(
-                            $"Incorrect arguments! You might be using the incorrect amount of arguments or type, use `!help {command.Value.Name}` for more information about that command.");
+                            $"Incorrect arguments! You might be using the incorrect amount of arguments or type, use `!help {commandName}` for more information about that command.");
+                        break;
+                    case CommandError.ObjectNotFound:
+                        await context.Channel.SendMessageAsync(
+                            $"Not found! If you passed in a user, its likely they don't exist. Use `!help {commandName}` for more info on the command you're trying to use.");
                         break;
                     default:
                         await context.Channel.SendMessageAsync(result.ToString());

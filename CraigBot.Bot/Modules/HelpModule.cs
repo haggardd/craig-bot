@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 namespace CraigBot.Bot.Modules
 {
     [Summary("Help Commands")]
+    [RequireContext(ContextType.Guild)]
     public class HelpModule : ModuleBase<SocketCommandContext>
     {
         private readonly CommandService _commandService;
