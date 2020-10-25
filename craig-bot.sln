@@ -1,18 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Bot", "CraigBot.Bot\CraigBot.Bot.csproj", "{5774CBC3-014B-4E14-A242-86F3629C8AEA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Bot", "src\CraigBot.Bot\CraigBot.Bot.csproj", "{5774CBC3-014B-4E14-A242-86F3629C8AEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Infrastructure", "CraigBot.Infrastructure\CraigBot.Infrastructure.csproj", "{24C4442E-7059-4E2C-80E6-A5D19649DAC0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Infrastructure", "src\CraigBot.Infrastructure\CraigBot.Infrastructure.csproj", "{24C4442E-7059-4E2C-80E6-A5D19649DAC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Domain", "CraigBot.Domain\CraigBot.Domain.csproj", "{C2C20626-C0FB-447E-B84C-7FF52A60DC60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Domain", "src\CraigBot.Domain\CraigBot.Domain.csproj", "{C2C20626-C0FB-447E-B84C-7FF52A60DC60}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3A33E080-2413-421D-8D70-02E3351D24EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{052636CE-D692-43AB-A32C-14DAD8B51C5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Bot.Tests", "CraigBot.Bot.Tests\CraigBot.Bot.Tests.csproj", "{0C4637FE-0A52-4E20-A878-43C5D7B40310}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Bot.Tests", "tests\CraigBot.Bot.Tests\CraigBot.Bot.Tests.csproj", "{0C4637FE-0A52-4E20-A878-43C5D7B40310}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Infrastructure.Tests", "CraigBot.Infrastructure.Tests\CraigBot.Infrastructure.Tests.csproj", "{7F3AE5C1-18C8-4A9F-8E14-DF399F515D10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Infrastructure.Tests", "tests\CraigBot.Infrastructure.Tests\CraigBot.Infrastructure.Tests.csproj", "{7F3AE5C1-18C8-4A9F-8E14-DF399F515D10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
