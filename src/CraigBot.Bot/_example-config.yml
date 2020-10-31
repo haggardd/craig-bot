@@ -1,0 +1,5 @@
+﻿prefix: "!"
+tokens:
+  discord: your-token-here
+settings:
+    dmHelp: false
