@@ -12,4 +12,4 @@ Desktop.ini
 .DS_Store
 
 # craig-bot specifics
-CraigBot.Bot/_config.yml
+src/CraigBot.Bot/_config.yml

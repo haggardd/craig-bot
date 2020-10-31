@@ -32,7 +32,8 @@ namespace CraigBot.Bot.Modules
         [Example("!leave")]
         public async Task Leave()
         {
-            var channel = (Context.Client.GetUser(Context.Client.CurrentUser.Id) as IGuildUser)?.VoiceChannel;
+            var bot = Context.Guild.GetUser(Context.Client.CurrentUser.Id);
+            var channel = bot.VoiceChannel;
 
             if (channel == null)
             {

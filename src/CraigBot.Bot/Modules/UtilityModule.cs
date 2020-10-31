@@ -83,7 +83,7 @@ namespace CraigBot.Bot.Modules
         
         [Command("latency")]
         [Summary("Replies with the Bot's latency.")]
-        [Example("!ping")]
+        [Example("!latency")]
         public async Task Latency()
             => await ReplyAsync($"Latency: `{Context.Client.Latency}ms`");
 

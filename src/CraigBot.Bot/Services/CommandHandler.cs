@@ -14,6 +14,7 @@ namespace CraigBot.Bot.Services
         private readonly IConfigurationRoot _config;
         private readonly IServiceProvider _provider;
 
+        // TODO: Might be a good idea to switch to a .json config file if possible
         public CommandHandler(
             DiscordSocketClient discord,
             CommandService commandService,

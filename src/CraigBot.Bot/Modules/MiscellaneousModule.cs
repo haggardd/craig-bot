@@ -21,12 +21,15 @@ namespace CraigBot.Bot.Modules
 
         #region Commands
         
-        // TODO: Would be nice to allow the user to pass the channel they want the bot to say it in (behind permissions maybe?)
         [Command("say")]
         [Summary("Echoes a given piece of text.")]
-        [Example("!say Welcome new members!")]
-        public async Task Say([Remainder][Summary("The text you wish to be repeated.")] string text)
-            => await ReplyAsync(text);
+        [Example("!say \"Welcome new members!\"")]
+        [Example("!say \"Welcome new members!\" #general")]
+        public async Task Say([Summary("The text you wish to be repeated.")] string text,
+            [Summary("The channel you wish message.")] SocketTextChannel channel = null)
+            => await (channel == null 
+                ? Context.Channel.SendMessageAsync(text)
+                : channel.SendMessageAsync(text));
         
         // TODO: Look into preventing numbers over int.MaxValue
         [Command("roll")]

@@ -13,11 +13,17 @@ namespace CraigBot.Bot.Modules
     {
         private readonly CommandService _commandService;
         private readonly IConfigurationRoot _config;
+        
+        private readonly bool _dmHelp;
+        private readonly string _prefix;
     
         public HelpModule(CommandService commandService, IConfigurationRoot config)
         {
             _commandService = commandService;
             _config = config;
+
+            _prefix = _config["prefix"];
+            _dmHelp = bool.Parse(_config["settings:dmHelp"]);
         }
 
         #region Commands
@@ -30,8 +36,8 @@ namespace CraigBot.Bot.Modules
         {
             var embed = new EmbedBuilder()
                 .WithColor(Color.Blue)
-                .WithTitle("All Commands: ")
-                .WithDescription("Below is a list of all current commands. Some may be restricted based on your role.")
+                .WithTitle("Commands List")
+                .WithDescription($"Use `{_prefix}help [command]` for info on specific commands.")
                 .WithFooter(f =>
                 {
                     f.Text = "Craig Bot, Brought to you by Discord.Net <3 / www.georgeblackwell.dev";
@@ -40,12 +46,8 @@ namespace CraigBot.Bot.Modules
 
             foreach (var module in _commandService.Modules)
             {
-                string description = null;
-
-                foreach (var command in module.Commands)
-                {
-                    description += $"`{GenerateCommandParameterString(command)}`\n";
-                }
+                var description = module.Commands.Aggregate<CommandInfo, string>(null, (current, command) 
+                    => current + $"`{GenerateCommandParameterString(command)}`\n");
 
                 if (!string.IsNullOrWhiteSpace(description))
                 {
@@ -53,7 +55,8 @@ namespace CraigBot.Bot.Modules
                 }
             }
 
-            await ReplyAsync("", false, embed.Build());
+            await (_dmHelp ? Context.User.SendMessageAsync("", false, embed.Build())
+                : ReplyAsync("", false, embed.Build()));
         }
         
         // TODO: Think of a good way to separate commands with the same name within the help embed, (currently only affects `!help`) 
@@ -67,15 +70,14 @@ namespace CraigBot.Bot.Modules
 
             if (!result.IsSuccess)
             {
-                await ReplyAsync("That command doesn't seem to exist! Try `!help` for a full list of commands.");
+                await ReplyAsync($"`{_prefix}{command}` doesn't seem to exist! Try `{_prefix}help` for a full list of commands.");
                 return;
             }
             
-            var prefix = _config["prefix"];
             var embed = new EmbedBuilder()
                 .WithColor(Color.Blue)
-                .WithTitle($"*{prefix}{command}*")
-                .WithDescription($"\n*({OptionalParam}) Optional | ({RequiredParam}) Required | ({MultipleParam}) Multiple*\n");
+                .WithTitle($"*{_prefix}{command}*")
+                .WithDescription($"\n*`({OptionalParam})` = Optional `({RequiredParam})` = Required `({MultipleParam})` = Multiple*\n");
 
             foreach (var commandMatch in result.Commands)
             {
@@ -94,7 +96,7 @@ namespace CraigBot.Bot.Modules
                         properties += parameter.IsOptional ? $"({OptionalParam})" : $"({RequiredParam})";
                         properties += parameter.IsMultiple ? $"({MultipleParam})" : "";
                     
-                        parameterInfo += $"• `[{parameter.Name}]` | `{properties}` | {parameter.Summary} \n";
+                        parameterInfo += $"• `[{parameter.Name}]` `{properties}` {parameter.Summary}\n";
                     }
                     
                     embed.AddField("Parameters", parameterInfo);
@@ -108,17 +110,17 @@ namespace CraigBot.Bot.Modules
                 }
                 
                 var examples = "";
-                    
                 examples = exampleInfo.Aggregate(examples, (current, example) 
-                    => current + $"• `{example.ExampleText}`\n");
+                    => current + $"• `{example.ExampleText}`\n  \n");
 
                 embed.AddField("Examples", $"{examples}");
             }
-
-            await ReplyAsync("", false, embed.Build());
+            
+            await (_dmHelp ? Context.User.SendMessageAsync("", false, embed.Build())
+                : ReplyAsync("", false, embed.Build()));
         }
         
-        #endregion!help fortune
+        #endregion
 
         #region Helpers
 
@@ -130,13 +132,12 @@ namespace CraigBot.Bot.Modules
         // TODO: May want to separate functions like this into a service
         private string GenerateCommandParameterString(CommandInfo command)
         {
-            var prefix = _config["prefix"];
             var parameters = string.Join("", 
                 command.Parameters.Select(p => 
                     $" [{p.Name}]"
                 ));
 
-            return $"{prefix}{command.Aliases.First()}{parameters}";
+            return $"{_prefix}{command.Aliases.First()}{parameters}";
         }
 
         #endregion
