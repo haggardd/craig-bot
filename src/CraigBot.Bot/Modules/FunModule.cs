@@ -24,7 +24,6 @@ namespace CraigBot.Bot.Modules
 
         [Command("fortune")]
         [Summary("Replies with a random fortune.")]
-        [Example("!fortune")]
         public async Task Fortune()
         {
             var fortunes = (await _staticDataRepository.Get("fortunes")).ToList();
@@ -35,7 +34,7 @@ namespace CraigBot.Bot.Modules
 
         [Command("8ball")]
         [Summary("Replies to a user's question like an 8 Ball.")]
-        [Example("!8ball Will this losing streak end?!")]
+        [Example("8ball Will this losing streak end?!")]
         public async Task EightBall([Remainder][Summary("The question you wish for the Bot to respond to.")] 
             string question)
         {

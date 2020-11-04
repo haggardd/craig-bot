@@ -28,10 +28,8 @@ namespace CraigBot.Bot.Modules
 
         #region Commands
         
-        // TODO: Display if parameters are optional here too, no need for the summary though
         [Command("help")]
         [Summary("Displays a list of all commands.")]
-        [Example("!help")]
         public async Task Help()
         {
             var embed = new EmbedBuilder()
@@ -59,10 +57,9 @@ namespace CraigBot.Bot.Modules
                 : ReplyAsync("", false, embed.Build()));
         }
         
-        // TODO: Think of a good way to separate commands with the same name within the help embed, (currently only affects `!help`) 
         [Command("help")]
-        [Summary("Gives more information on specific commands.")]
-        [Example("!help poll")]
+        [Summary("Gives information on specific commands.")]
+        [Example("help poll")]
         public async Task Help([Summary("The command name you wish to get more information about.")] 
             string command)
         {
@@ -76,46 +73,58 @@ namespace CraigBot.Bot.Modules
             
             var embed = new EmbedBuilder()
                 .WithColor(Color.Blue)
-                .WithTitle($"*{_prefix}{command}*")
-                .WithDescription($"\n*`({OptionalParam})` = Optional `({RequiredParam})` = Required `({MultipleParam})` = Multiple*\n");
+                .WithTitle($"*{_prefix}{command}*");
 
-            foreach (var commandMatch in result.Commands)
+            for (var i = 0; i < result.Commands.Count; i++)
             {
+                var commandMatch = result.Commands[i];
                 var commandInfo = commandMatch.Command;
-                
-                embed.AddField($"`{GenerateCommandParameterString(commandInfo)}`", commandInfo.Summary);
+
+                var commandHeader = i != 0
+                    ? $"─────────────────────────────\n`{GenerateCommandParameterString(commandInfo)}`"
+                    : $"`{GenerateCommandParameterString(commandInfo)}`";
+
+                embed.AddField(
+                    result.Commands.Count > 1
+                        ? $"{commandHeader} - *Variant*"
+                        : commandHeader, commandInfo.Summary);
 
                 if (commandInfo.Parameters.Any())
                 {
+                    if (string.IsNullOrWhiteSpace(embed.Description))
+                    {
+                        embed.WithDescription("Key: `required` | *`optional`* | __`multiple`__");
+                    }
+                    
                     var parameterInfo = "";
 
                     foreach (var parameter in commandInfo.Parameters)
                     {
                         var properties = "";
 
-                        properties += parameter.IsOptional ? $"({OptionalParam})" : $"({RequiredParam})";
-                        properties += parameter.IsMultiple ? $"({MultipleParam})" : "";
-                    
-                        parameterInfo += $"• `[{parameter.Name}]` `{properties}` {parameter.Summary}\n";
+                        properties += parameter.IsMultiple ? "__" : "";
+                        properties += parameter.IsOptional ? "*" : "";
+
+                        parameterInfo += $"• {properties}`[{parameter.Name}]`{properties} {parameter.Summary}\n";
                     }
-                    
+
                     embed.AddField("Parameters", parameterInfo);
                 }
-                
+
                 var exampleInfo = commandInfo.Attributes.OfType<ExampleAttribute>().ToList();
 
                 if (!exampleInfo.Any())
                 {
                     continue;
                 }
-                
+
                 var examples = "";
-                examples = exampleInfo.Aggregate(examples, (current, example) 
-                    => current + $"• `{example.ExampleText}`\n  \n");
+                examples = exampleInfo.Aggregate(examples, (current, example)
+                    => current + $"• `{_prefix}{example.ExampleText}`\n");
 
                 embed.AddField("Examples", $"{examples}");
             }
-            
+
             await (_dmHelp ? Context.User.SendMessageAsync("", false, embed.Build())
                 : ReplyAsync("", false, embed.Build()));
         }
@@ -124,12 +133,7 @@ namespace CraigBot.Bot.Modules
 
         #region Helpers
 
-        // TODO: May want to relocate this to a separate file
-        private const char OptionalParam = 'O';
-        private const char RequiredParam = 'R';
-        private const char MultipleParam = 'M';
-
-        // TODO: May want to separate functions like this into a service
+        // TODO: May want to separate functions like this into a helper class
         private string GenerateCommandParameterString(CommandInfo command)
         {
             var parameters = string.Join("", 

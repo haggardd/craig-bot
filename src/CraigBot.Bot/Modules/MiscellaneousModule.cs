@@ -23,8 +23,8 @@ namespace CraigBot.Bot.Modules
         
         [Command("say")]
         [Summary("Echoes a given piece of text.")]
-        [Example("!say \"Welcome new members!\"")]
-        [Example("!say \"Welcome new members!\" #general")]
+        [Example("say \"Welcome new members!\"")]
+        [Example("say \"Welcome new members!\" #general")]
         public async Task Say([Summary("The text you wish to be repeated.")] string text,
             [Summary("The channel you wish message.")] SocketTextChannel channel = null)
             => await (channel == null 
@@ -34,8 +34,8 @@ namespace CraigBot.Bot.Modules
         // TODO: Look into preventing numbers over int.MaxValue
         [Command("roll")]
         [Summary("Rolls a 6 sided die or a die of user defined size.")]
-        [Example("!roll")]
-        [Example("!roll 9")]
+        [Example("roll")]
+        [Example("roll 9")]
         public async Task Roll([Summary("The size of the die you wish to roll.")] 
             int size = 0)
             => await (size <= 0
@@ -44,8 +44,8 @@ namespace CraigBot.Bot.Modules
         
         [Command("choose")]
         [Summary("Makes a choice from a selection of given options.")]
-        [Example("!choose cheese bread water")]
-        [Example("!choose \"cheese & water\" \"bread & beer\"")]
+        [Example("choose cheese bread water")]
+        [Example("choose \"cheese & water\" \"bread & beer\"")]
         public async Task Choose([Summary("The choices you wish the Bot to choose from.")] 
             params string[] choices)
         {
@@ -61,7 +61,6 @@ namespace CraigBot.Bot.Modules
         
         [Command("flip")]
         [Summary("Flips a coin.")]
-        [Example("!flip")]
         public async Task Flip()
         {
             var choice = _random.Next(2) == 0 ? "heads" : "tails";
@@ -71,8 +70,8 @@ namespace CraigBot.Bot.Modules
 
         [Command("avatar")]
         [Summary("Replies with the user's avatar.")]
-        [Example("!avatar")]
-        [Example("!avatar @Craig")]
+        [Example("avatar")]
+        [Example("avatar @Craig")]
         public async Task Avatar([Summary("The user's avatar you wish to see.")] 
             SocketGuildUser user = null)
             => await (user != null
@@ -85,7 +84,7 @@ namespace CraigBot.Bot.Modules
         *  - Check who has already voted */
         [Command("poll")]
         [Summary("Creates a channel wide poll with a set duration and up to 10 options.")]
-        [Example("!poll \"What shall we play?\" 10 \"CS:GO\" \"Red Dead\" \"Sea of Thieves\"")]
+        [Example("poll \"What shall we play?\" 10 \"CS:GO\" \"Red Dead\" \"Sea of Thieves\"")]
         public async Task Poll([Summary("The question / choice you'd like to start a poll for.")] string question, 
             [Summary("The amount of seconds to pass before the winner is decided.")] int duration, 
             [Summary("The options to pick from during the poll.")] params string[] options)

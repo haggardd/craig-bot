@@ -2,4 +2,4 @@
 tokens:
   discord: your-token-here
 settings:
-    dmHelp: false
+  dmHelp: false

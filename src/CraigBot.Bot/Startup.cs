@@ -61,6 +61,7 @@ namespace CraigBot.Bot
                 .AddSingleton<IStaticDataRepository, StaticDataRepository>()
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<StartupService>()
+                .AddSingleton<AudioService>()
                 .AddSingleton<LoggingService>()
                 .AddSingleton<Random>()
                 .AddSingleton(Configuration);

@@ -18,7 +18,6 @@ namespace CraigBot.Bot.Modules
         // TODO: May want to add more fields to this...
         [Command("inspect")]
         [Summary("Displays information about the server.")]
-        [Example("!inspect")]
         public async Task Inspect()
         {
             var created = Context.Guild.CreatedAt.DateTime.ToString(CultureInfo.CurrentCulture);
@@ -38,7 +37,7 @@ namespace CraigBot.Bot.Modules
         // TODO: Could benefit from added more fields, i.e. current game / music, etc...
         [Command("inspect")] 
         [Summary("Displays information about a given user.")]
-        [Example("!inspect @Craig")]
+        [Example("inspect @Craig")]
         public async Task Inspect([Summary("The user you wish to inspect.")] SocketGuildUser user)
         {
             var joined = user.JoinedAt == null
@@ -61,7 +60,7 @@ namespace CraigBot.Bot.Modules
         // TODO: May want to add more fields to this...
         [Command("inspect")]
         [Summary("Displays information about a given text channel.")]
-        [Example("!inspect #general")]
+        [Example("inspect #general")]
         public async Task Inspect([Summary("The text channel you wish to inspect.")] SocketTextChannel channel)
         {
             var embed = new EmbedBuilder()
@@ -76,14 +75,12 @@ namespace CraigBot.Bot.Modules
         }
         
         [Command("ping")]
-        [Summary("A test command, replies with 'pong'.")]
-        [Example("!ping")]
+        [Summary("A test command, replies with 'Pong!'.")]
         public async Task Ping()
             => await ReplyAsync("Pong!");
         
         [Command("latency")]
         [Summary("Replies with the Bot's latency.")]
-        [Example("!latency")]
         public async Task Latency()
             => await ReplyAsync($"Latency: `{Context.Client.Latency}ms`");
 
