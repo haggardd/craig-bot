@@ -30,6 +30,7 @@ namespace CraigBot.Bot.Services
         public async Task StartAsync()
         {
             var discordToken = _config["tokens:discord"];
+            var prefix = _config["prefix"];
 
             if (string.IsNullOrWhiteSpace(discordToken))
             {
@@ -38,8 +39,8 @@ namespace CraigBot.Bot.Services
 
             await _discord.LoginAsync(TokenType.Bot, discordToken);
             await _discord.StartAsync();
-            await _discord.SetActivityAsync(new Game($"{_config["prefix"]}help", ActivityType.Listening));
-            
+            await _discord.SetActivityAsync(new Game($"{prefix}help", ActivityType.Listening));
+
             await _commandService.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
         }
     }
