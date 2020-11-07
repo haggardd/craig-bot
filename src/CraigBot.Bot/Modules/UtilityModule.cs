@@ -57,19 +57,23 @@ namespace CraigBot.Bot.Modules
             await ReplyAsync("", false, embed.Build());
         }
         
-        // TODO: May want to add more fields to this...
         [Command("inspect")]
         [Summary("Displays information about a given text channel.")]
         [Example("inspect #general")]
         public async Task Inspect([Summary("The text channel you wish to inspect.")] SocketTextChannel channel)
         {
+            var slowModeInterval = channel.SlowModeInterval == 0
+                ? "None"
+                : $"`{channel.SlowModeInterval}s`";
+
             var embed = new EmbedBuilder()
                 .WithColor(Color.Blue)
                 .WithTitle($"#{channel.Name}")
                 .WithDescription(channel.Topic ?? "No topic...")
                 .AddField("Created", channel.CreatedAt.DateTime.ToString(CultureInfo.CurrentCulture))
                 .AddField("Category", $"{channel.Category}", true)
-                .AddField("NSFW?", $"`{channel.IsNsfw.ToString().ToUpper()}`", true);
+                .AddField("NSFW?", $"`{channel.IsNsfw.ToString().ToUpper()}`", true)
+                .AddField("Slow-Mode Interval", slowModeInterval);
 
             await ReplyAsync("", false, embed.Build());
         }

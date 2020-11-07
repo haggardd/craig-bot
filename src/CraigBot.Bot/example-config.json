@@ -1,0 +1,8 @@
+﻿{
+  "Token": "YOUR BOT TOKEN HERE",
+  "Settings":
+  {
+    "Prefix": "!",
+    "DmHelp": false
+  }
+}
