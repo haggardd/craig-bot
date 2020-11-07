@@ -15,7 +15,6 @@ namespace CraigBot.Bot.Services
         private readonly IServiceProvider _provider;
 
         // TODO: Have a look through the commands, check if any need to be set to run in 'AsyncMode'
-        // TODO: Might be a good idea to switch to a .json config file if possible
         public CommandHandler(
             DiscordSocketClient discord,
             CommandService commandService,
@@ -42,7 +41,7 @@ namespace CraigBot.Bot.Services
             
             var argPos = 0;
             
-            if (!message.HasStringPrefix(_config["prefix"], ref argPos) ||
+            if (!message.HasStringPrefix(_config["Settings:Prefix"], ref argPos) ||
                 message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
             {
                 return;

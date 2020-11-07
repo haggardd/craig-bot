@@ -29,8 +29,8 @@ namespace CraigBot.Bot.Services
 
         public async Task StartAsync()
         {
-            var discordToken = _config["tokens:discord"];
-            var prefix = _config["prefix"];
+            var discordToken = _config["Token"];
+            var prefix = _config["Settings:Prefix"];
 
             if (string.IsNullOrWhiteSpace(discordToken))
             {

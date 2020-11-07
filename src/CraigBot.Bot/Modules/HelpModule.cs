@@ -22,8 +22,8 @@ namespace CraigBot.Bot.Modules
             _commandService = commandService;
             _config = config;
 
-            _prefix = _config["prefix"];
-            _dmHelp = bool.Parse(_config["settings:dmHelp"]);
+            _prefix = _config["Settings:Prefix"];
+            _dmHelp = bool.Parse(_config["Settings:DmHelp"]);
         }
 
         #region Commands

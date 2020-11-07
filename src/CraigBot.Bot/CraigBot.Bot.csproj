@@ -9,18 +9,18 @@
       <PackageReference Include="Discord.Net" Version="2.2.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
       <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.8" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.8" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
-      <PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="_config.yml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="libsodium.dll">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="opus.dll">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="config.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

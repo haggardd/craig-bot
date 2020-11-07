@@ -19,7 +19,7 @@ namespace CraigBot.Bot
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
-                .AddYamlFile("_config.yml");
+                .AddJsonFile("config.json");
 
             Configuration = builder.Build();
         }
