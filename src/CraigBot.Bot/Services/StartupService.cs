@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace CraigBot.Bot.Services
 {
-    public class StartupService
+    public class StartupService : IStartupService
     {
         private readonly IServiceProvider _provider;
         private readonly DiscordSocketClient _discord;

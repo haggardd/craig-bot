@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
 namespace CraigBot.Bot.Services
 {
-    public class LoggingService
+    public class LoggingService : ILoggingService
     {
         private readonly DiscordSocketClient _discord;
         private readonly CommandService _commandService;
@@ -26,7 +27,7 @@ namespace CraigBot.Bot.Services
             _commandService.Log += OnLog;
         }
 
-        private Task OnLog(LogMessage message)
+        public Task OnLog(LogMessage message)
         {
             if (!Directory.Exists(LogDirectory))
             {

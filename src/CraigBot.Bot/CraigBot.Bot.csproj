@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CraigBot.Domain\CraigBot.Domain.csproj" />
+      <ProjectReference Include="..\CraigBot.Core\CraigBot.Core.csproj" />
       <ProjectReference Include="..\CraigBot.Infrastructure\CraigBot.Infrastructure.csproj" />
     </ItemGroup>
 

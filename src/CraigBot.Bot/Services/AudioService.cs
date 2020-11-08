@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
+using CraigBot.Core.Services;
 using Discord.Audio;
 using Discord.WebSocket;
 
 namespace CraigBot.Bot.Services
 {
-    public class AudioService
+    public class AudioService : IAudioService
     {
         public IAudioClient AudioClient { get; set; }
         
@@ -17,7 +18,7 @@ namespace CraigBot.Bot.Services
             _discord.VoiceServerUpdated += OnConnectToVoiceChannel;
         }
 
-        private async Task OnConnectToVoiceChannel(SocketVoiceServer voiceChannel)
+       public async Task OnConnectToVoiceChannel(SocketVoiceServer voiceChannel)
         {
             var botUser = _discord.GetGuild(voiceChannel.Guild.Id).GetUser(_discord.CurrentUser.Id);
             

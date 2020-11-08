@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Bot", "src\CraigBo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Infrastructure", "src\CraigBot.Infrastructure\CraigBot.Infrastructure.csproj", "{24C4442E-7059-4E2C-80E6-A5D19649DAC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Domain", "src\CraigBot.Domain\CraigBot.Domain.csproj", "{C2C20626-C0FB-447E-B84C-7FF52A60DC60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraigBot.Core", "src\CraigBot.Core\CraigBot.Core.csproj", "{C2C20626-C0FB-447E-B84C-7FF52A60DC60}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3A33E080-2413-421D-8D70-02E3351D24EA}"
 EndProject

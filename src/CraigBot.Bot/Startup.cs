@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CraigBot.Bot.Services;
-using CraigBot.Domain.Repositories;
+using CraigBot.Core.Repositories;
+using CraigBot.Core.Services;
 using CraigBot.Infrastructure.Repositories;
 using Discord;
 using Discord.Commands;
@@ -38,16 +39,17 @@ namespace CraigBot.Bot
 
             var provider = services.BuildServiceProvider();
 
-            provider.GetRequiredService<LoggingService>();
-            provider.GetRequiredService<CommandHandler>();
+            provider.GetRequiredService<ILoggingService>();
+            provider.GetRequiredService<ICommandHandler>();
 
-            await provider.GetRequiredService<StartupService>().StartAsync();
+            await provider.GetRequiredService<IStartupService>().StartAsync();
 
             await Task.Delay(-1);
         }
 
         private void ConfigureServices(IServiceCollection services)
         {
+            // TODO: Might be a good idea to create your own implementations of the discord client and command service
             services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
                 {
                     LogLevel = LogSeverity.Verbose,
@@ -59,10 +61,10 @@ namespace CraigBot.Bot
                     DefaultRunMode = RunMode.Async
                 }))
                 .AddSingleton<IStaticDataRepository, StaticDataRepository>()
-                .AddSingleton<CommandHandler>()
-                .AddSingleton<StartupService>()
-                .AddSingleton<AudioService>()
-                .AddSingleton<LoggingService>()
+                .AddSingleton<ICommandHandler, CommandHandler>()
+                .AddSingleton<IStartupService, StartupService>()
+                .AddSingleton<IAudioService, AudioService>()
+                .AddSingleton<ILoggingService, LoggingService>()
                 .AddSingleton<Random>()
                 .AddSingleton(Configuration);
         }

@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using CraigBot.Bot.Common;
-using CraigBot.Bot.Services;
+using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
 
 namespace CraigBot.Bot.Modules
 {
+    // TODO: `opus` is failing to be recognised when running on the pi, something to look into
     /* TODO: Finish implementing this
      * Things to consider:
      * - Get basic YouTube playback working first
@@ -14,13 +15,15 @@ namespace CraigBot.Bot.Modules
     [RequireContext(ContextType.Guild)]
     public class AudioModule : ModuleBase<SocketCommandContext>
     {
-        private readonly AudioService _audioService;
+        private readonly IAudioService _audioService;
 
-        public AudioModule(AudioService audioService)
+        public AudioModule(IAudioService audioService)
         {
             _audioService = audioService;
         }
-        
+
+        #region Commands
+
         [Command("join", RunMode = RunMode.Async)]
         [Summary("Joins your current voice channel.")]
         public async Task Join()
@@ -29,7 +32,7 @@ namespace CraigBot.Bot.Modules
 
             if (channel == null)
             {
-                await ReplyAsync("You have to be in a voice channel for me to join!");
+                await ReplyAsync("You have to be in a voice channel for me to join you!");
                 return;
             }
             
@@ -73,5 +76,7 @@ namespace CraigBot.Bot.Modules
         {
             await ReplyAsync("Not implemented yet...");
         }
+        
+        #endregion
     }
 }

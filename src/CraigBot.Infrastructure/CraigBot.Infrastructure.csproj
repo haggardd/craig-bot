@@ -5,11 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Database" />
       <Folder Include="Repositories\Data" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\CraigBot.Domain\CraigBot.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,6 +20,10 @@
       <None Update="Repositories\Data\eightBall.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CraigBot.Core\CraigBot.Core.csproj" />
     </ItemGroup>
 
 </Project>

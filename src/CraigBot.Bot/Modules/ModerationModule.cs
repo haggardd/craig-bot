@@ -14,10 +14,11 @@ namespace CraigBot.Bot.Modules
         // TODO: Make sure permission attributes work as intended
 
         #region Commands
-
+    
+        // TODO: There seems to be an issue with kick not finding users that exist
         [Command("kick")]
         [Summary("Kicks the given user from the server.")]
-        [RequireUserPermission(GuildPermission.KickMembers)]
+        [RequireUserPermission(GuildPermission.Administrator)]
         [Example("kick @Craig")]
         [Example("kick @Craig spamming")]
         public async Task Kick([Summary("The user you wish to kick.")] SocketGuildUser user,
@@ -28,7 +29,7 @@ namespace CraigBot.Bot.Modules
         [Summary("Bans the given user from the server.")]
         [Example("ban @Craig")]
         [Example("ban @Craig repeat spamming")]
-        [RequireUserPermission(GuildPermission.BanMembers)]
+        [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Ban([Summary("The user you wish to ban.")] SocketGuildUser user,
             [Remainder][Summary("The reason for the ban.")] string reason = null) 
             => await user.BanAsync(7, reason);
@@ -36,7 +37,7 @@ namespace CraigBot.Bot.Modules
         [Command("warn")]
         [Summary("Warns the given user from the server.")]
         [Example("warn @Craig No caps please!")]
-        [RequireUserPermission(GuildPermission.KickMembers)]
+        [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Warn([Summary("The user you wish to warn.")] SocketGuildUser user, 
             [Remainder] [Summary("The reason for the warning.")] string reason)
             => await ReplyAsync($"{user.Mention}, this is a warning! Reason: *{reason}*");
@@ -44,14 +45,14 @@ namespace CraigBot.Bot.Modules
         [Command("mute")]
         [Summary("Server mutes the given user.")]
         [Example("mute @Craig")]
-        [RequireUserPermission(GuildPermission.MuteMembers)]
+        [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Mute([Summary("The user you wish to server mute.")] SocketGuildUser user)
             => await user.ModifyAsync(x => { x.Mute = true; });
         
         [Command("unmute")]
         [Summary("Un-mutes the given user.")]
         [Example("unmute @Craig")]
-        [RequireUserPermission(GuildPermission.MuteMembers)]
+        [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Unmute([Summary("The user you wish to un-mute.")] SocketGuildUser user)
             => await user.ModifyAsync(x => { x.Mute = false; });
 

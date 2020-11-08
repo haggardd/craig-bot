@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using CraigBot.Domain.Repositories;
+using CraigBot.Core.Repositories;
 using Newtonsoft.Json;
 
 namespace CraigBot.Infrastructure.Repositories
