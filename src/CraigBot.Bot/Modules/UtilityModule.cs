@@ -8,7 +8,6 @@ using Discord.WebSocket;
 
 namespace CraigBot.Bot.Modules
 {
-    // TODO: Improve error reporting for `MultipleMatches` error
     [Summary("Utility Commands")]
     [RequireContext(ContextType.Guild)]
     public class UtilityModule : ModuleBase<SocketCommandContext>
@@ -35,6 +34,7 @@ namespace CraigBot.Bot.Modules
         }
         
         // TODO: Could benefit from added more fields, i.e. current game / music, etc...
+        // TODO: User status seems to read `Offline` even when the user is online
         [Command("inspect")] 
         [Summary("Displays information about a given user.")]
         [Example("inspect @Craig")]

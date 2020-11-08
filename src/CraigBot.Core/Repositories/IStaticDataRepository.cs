@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CraigBot.Domain.Repositories
+namespace CraigBot.Core.Repositories
 {
     public interface IStaticDataRepository
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CraigBot.Bot.Common;
-using CraigBot.Domain.Repositories;
+using CraigBot.Core.Repositories;
 using Discord.Commands;
 
 namespace CraigBot.Bot.Modules
