@@ -11,7 +11,6 @@ namespace CraigBot.Bot.Modules
     public class ModerationModule : ModuleBase<SocketCommandContext>
     {
         // TODO: Might also be a good idea to send a message into the chat for certain actions
-        // TODO: Make sure permission attributes work as intended
 
         #region Commands
     

@@ -29,7 +29,6 @@ namespace CraigBot.Bot.Modules
                 ? Context.Channel.SendMessageAsync(text)
                 : channel.SendMessageAsync(text));
         
-        // TODO: Look into preventing numbers over int.MaxValue
         [Command("roll")]
         [Summary("Rolls a 6 sided die or a die of user defined size.")]
         [Example("roll")]

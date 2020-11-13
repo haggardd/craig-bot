@@ -4,6 +4,6 @@ namespace CraigBot.Core.Services
 {
     public interface IStartupService
     {
-        Task StartAsync();
+        Task StartClient();
     }
 }

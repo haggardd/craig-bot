@@ -1,8 +1,20 @@
 ﻿{
-  "Token": "YOUR BOT TOKEN HERE",
-  "Settings":
+  "Bot":
   {
+    "Token": "YOUR BOT TOKEN HERE",
     "Prefix": "!",
     "DmHelp": false
+  },
+  "ModuleFlags":
+  {
+    "Audio": true,
+    "Banking": true,
+    "Betting": true,
+    "Fun": true,
+    "Help": true,
+    "Miscellaneous": true,
+    "Moderation": true,
+    "Poll": true,
+    "Utility": true
   }
 }

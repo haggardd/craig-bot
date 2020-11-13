@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using CraigBot.Bot.Configuration;
 using CraigBot.Bot.Services;
+using CraigBot.Bot.Services.Discord;
 using CraigBot.Core.Repositories;
 using CraigBot.Core.Services;
 using CraigBot.Infrastructure.Repositories;
-using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
@@ -14,13 +15,13 @@ namespace CraigBot.Bot
 {
     public class Startup
     {
-        private IConfigurationRoot Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public Startup(string[] args)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("config.json");
+                .AddJsonFile("config.json", false, false);
 
             Configuration = builder.Build();
         }
@@ -42,24 +43,15 @@ namespace CraigBot.Bot
             provider.GetRequiredService<ILoggingService>();
             provider.GetRequiredService<ICommandHandler>();
 
-            await provider.GetRequiredService<IStartupService>().StartAsync();
+            await provider.GetRequiredService<IStartupService>().StartClient();
 
             await Task.Delay(-1);
         }
 
         private void ConfigureServices(IServiceCollection services)
         {
-            // TODO: Might be a good idea to create your own implementations of the discord client and command service
-            services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
-                {
-                    LogLevel = LogSeverity.Verbose,
-                    MessageCacheSize = 1000
-                }))
-                .AddSingleton(new CommandService(new CommandServiceConfig
-                {
-                    LogLevel = LogSeverity.Verbose,
-                    DefaultRunMode = RunMode.Async
-                }))
+            services.AddSingleton<DiscordSocketClient, CraigClient>()
+                .AddSingleton<CommandService, CraigCommandService>()
                 .AddSingleton<IStaticDataRepository, StaticDataRepository>()
                 .AddSingleton<ICommandHandler, CommandHandler>()
                 .AddSingleton<IStartupService, StartupService>()
@@ -67,6 +59,10 @@ namespace CraigBot.Bot
                 .AddSingleton<ILoggingService, LoggingService>()
                 .AddSingleton<Random>()
                 .AddSingleton(Configuration);
+
+            services.AddOptions()
+                .Configure<BotOptions>(Configuration.GetSection(BotOptions.ConfigurationHeader))
+                .Configure<ModuleFlagOptions>(Configuration.GetSection(ModuleFlagOptions.ConfigurationHeader));
         }
     }
 }
