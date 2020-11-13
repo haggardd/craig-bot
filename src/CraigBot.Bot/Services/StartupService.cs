@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using CraigBot.Bot.Configuration;
 using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace CraigBot.Bot.Services
 {
@@ -14,34 +15,32 @@ namespace CraigBot.Bot.Services
         private readonly IServiceProvider _provider;
         private readonly DiscordSocketClient _discord;
         private readonly CommandService _commandService;
-        private readonly IConfigurationRoot _config;
+        private readonly BotOptions _options;
 
         public StartupService(
             IServiceProvider provider,
             DiscordSocketClient discord,
             CommandService commandService,
-            IConfigurationRoot config)
+            IOptions<BotOptions> options)
         {
             _provider = provider;
             _discord = discord;
             _commandService = commandService;
-            _config = config;
+            _options = options.Value;
         }
 
-        public async Task StartAsync()
+        public async Task StartClient()
         {
-            var discordToken = _config["Token"];
-            var prefix = _config["Settings:Prefix"];
-
-            if (string.IsNullOrWhiteSpace(discordToken))
+            if (string.IsNullOrWhiteSpace(_options.Token))
             {
                 throw new Exception("Your token is missing or configured incorrectly.");
             }
 
-            await _discord.LoginAsync(TokenType.Bot, discordToken);
+            await _discord.LoginAsync(TokenType.Bot, _options.Token);
             await _discord.StartAsync();
-            await _discord.SetActivityAsync(new Game($"{prefix}help", ActivityType.Listening));
-
+            await _discord.SetActivityAsync(new Game($"{_options.Prefix}help", ActivityType.Listening));
+            
+            // TODO: Figure a way to determine if the module is disable, use the new flags in the options
             await _commandService.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
         }
     }

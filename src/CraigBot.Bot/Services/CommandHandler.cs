@@ -1,34 +1,34 @@
 ﻿using System;
 using System.Threading.Tasks;
+using CraigBot.Bot.Configuration;
 using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace CraigBot.Bot.Services
 {
+    // TODO: Add more preconditions for bot and user permissions
+    // TODO: Look into where commands should be preformed, i.e. DMs and channel messages
     public class CommandHandler : ICommandHandler
     {
         private readonly DiscordSocketClient _discord;
         private readonly CommandService _commandService;
-        private readonly IConfigurationRoot _config;
+        private readonly BotOptions _options;
         private readonly IServiceProvider _provider;
-        private readonly string _prefix;
-        
+
         public CommandHandler(
             DiscordSocketClient discord,
             CommandService commandService,
-            IConfigurationRoot config,
+            IOptions<BotOptions> options,
             IServiceProvider provider)
         {
             _discord = discord;
             _commandService = commandService;
-            _config = config;
+            _options = options.Value;
             _provider = provider;
 
-            _prefix = _config["Settings:Prefix"];
-            
             _discord.MessageReceived += OnMessageReceived;
             _commandService.CommandExecuted += OnCommandExecuted;
         }
@@ -44,7 +44,7 @@ namespace CraigBot.Bot.Services
             
             var argPos = 0;
             
-            if (!message.HasStringPrefix(_prefix, ref argPos) ||
+            if (!message.HasStringPrefix(_options.Prefix, ref argPos) ||
                 message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
             {
                 return;
@@ -64,21 +64,21 @@ namespace CraigBot.Bot.Services
             var message = result.Error switch
             {
                 CommandError.UnknownCommand => 
-                    $"Unknown command! Make sure you're typing the correct command syntax, use `{_prefix}help` for a list of all commands.",
+                    $"Unknown command! Make sure you're typing the correct command syntax, use `{_options.Prefix}help` for a list of all commands.",
                 CommandError.BadArgCount => 
-                    $"Incorrect arguments! You might be using the incorrect amount of arguments or type, use `{_prefix}help {command.Value.Name}` for more information about that command.",
+                    $"Incorrect arguments! You might be using the incorrect amount of arguments or type, use `{_options.Prefix}help {command.Value.Name}` for more information about that command.",
                 CommandError.ObjectNotFound => 
-                    $"Not found! If you passed in a user, its likely they don't exist. Use `{_prefix}help {command.Value.Name}` for more info on the command you're trying to use.",
+                    $"Not found! If you passed in a user, its likely they don't exist. Use `{_options.Prefix}help {command.Value.Name}` for more info on the command you're trying to use.",
                 CommandError.UnmetPrecondition => 
                     "Unmet precondition! You lack the correct precondition, this is most likely because you lack the correct permissions to use this command.",
                 CommandError.MultipleMatches =>
-                    $"Multiple matches! Multiple matches were found for `{_prefix}{command.Value.Name}`, use `{_prefix}help {command.Value.Name}` for info on specific differences.",
+                    $"Multiple matches! Multiple matches were found for `{_options.Prefix}{command.Value.Name}`, use `{_options.Prefix}help {command.Value.Name}` for info on specific differences.",
                 CommandError.ParseFailed =>
-                    $"Parsing failure! `{_prefix}{command.Value.Name}` failed to parse, this has been logged.`",
+                    $"Parsing failure! `{_options.Prefix}{command.Value.Name}` failed to parse, this has been logged.",
                 CommandError.Unsuccessful =>
-                    $"Unsuccessful! `{_prefix}{command.Value.Name}` failed to execute successfully, this has been logged.",
+                    $"Unsuccessful! `{_options.Prefix}{command.Value.Name}` failed to execute successfully, this has been logged.",
                 CommandError.Exception => 
-                    $"Exception thrown! `{_prefix}{command.Value.Name}` threw an exception, this has been logged.",
+                    $"Exception thrown! `{_options.Prefix}{command.Value.Name}` threw an exception, this has been logged.",
                 _ => result.ToString()
             };
 

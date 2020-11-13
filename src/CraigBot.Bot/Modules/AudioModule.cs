@@ -24,7 +24,7 @@ namespace CraigBot.Bot.Modules
 
         #region Commands
 
-        [Command("join", RunMode = RunMode.Async)]
+        [Command("join")]
         [Summary("Joins your current voice channel.")]
         public async Task Join()
         {

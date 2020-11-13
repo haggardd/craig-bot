@@ -15,6 +15,7 @@ namespace CraigBot.Bot.Modules
         #region Commands
 
         // TODO: May want to add more fields to this...
+        // TODO: Look into create an embed factory or helper class
         [Command("inspect")]
         [Summary("Displays information about the server.")]
         public async Task Inspect()
