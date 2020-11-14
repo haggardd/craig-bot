@@ -60,9 +60,9 @@ namespace CraigBot.Bot.Modules
         [Summary("Flips a coin.")]
         public async Task Flip()
         {
-            var choice = _random.Next(2) == 0 ? "heads" : "tails";
+            var result = _random.Next(2) == 0 ? "heads" : "tails";
 
-            await ReplyAsync($"Its {choice}!");
+            await ReplyAsync($"Its {result}!");
         }
 
         [Command("avatar")]
