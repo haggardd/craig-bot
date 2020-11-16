@@ -9,7 +9,8 @@ namespace CraigBot.Bot.Services.Discord
         private static readonly DiscordSocketConfig Configuration = new DiscordSocketConfig
         {
             LogLevel = LogSeverity.Verbose,
-            MessageCacheSize = 1000
+            MessageCacheSize = 1000,
+            AlwaysDownloadUsers = true
         };
         
         public CraigClient(ILoggingService loggingService) : base(Configuration)
