@@ -12,12 +12,15 @@ namespace CraigBot.Bot.Modules
     public class FunModule : ModuleBase<SocketCommandContext>
     {
         private readonly Random _random;
-        private readonly IStaticDataRepository _staticDataRepository;
+        private readonly IFortuneCookieRepository _fortuneCookieRepository;
+        private readonly IEightBallResponseRepository _eightBallResponseRepository;
 
-        public FunModule(Random random, IStaticDataRepository staticDataRepository)
+        public FunModule(Random random, IFortuneCookieRepository fortuneCookieRepository,
+            IEightBallResponseRepository eightBallResponseRepository)
         {
             _random = random;
-            _staticDataRepository = staticDataRepository;
+            _fortuneCookieRepository = fortuneCookieRepository;
+            _eightBallResponseRepository = eightBallResponseRepository;
         }
         
         #region Commands
@@ -26,10 +29,10 @@ namespace CraigBot.Bot.Modules
         [Summary("Replies with a random fortune.")]
         public async Task Fortune()
         {
-            var fortunes = (await _staticDataRepository.Get("fortunes")).ToList();
-            var randomIndex = _random.Next(fortunes.Count);
+            var fortunes = (await _fortuneCookieRepository.GetAll()).ToList();
+            var randomIndex = _random.Next(fortunes.Count());
 
-            await ReplyAsync(fortunes[randomIndex]);
+            await ReplyAsync(fortunes[randomIndex].Fortune);
         }
 
         [Command("8ball")]
@@ -38,10 +41,10 @@ namespace CraigBot.Bot.Modules
         public async Task EightBall([Remainder][Summary("The question you wish for the Bot to respond to.")] 
             string question)
         {
-            var responses = (await _staticDataRepository.Get("eightBall")).ToList();
+            var responses = (await _eightBallResponseRepository.GetAll()).ToList();
             var randomIndex = _random.Next(responses.Count);
 
-            await ReplyAsync(responses[randomIndex]);
+            await ReplyAsync(responses[randomIndex].Response);
         }
 
         #endregion

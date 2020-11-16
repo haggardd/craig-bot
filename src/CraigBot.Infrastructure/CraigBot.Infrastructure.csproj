@@ -5,11 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Database" />
-      <Folder Include="Repositories\Data" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     </ItemGroup>
 
@@ -17,7 +13,13 @@
       <None Update="Repositories\Data\fortunes.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Repositories\Data\eightBall.json">
+      <None Update="Repositories\Data\eightBallResponses.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Data\fortunes.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Data\eightBallResponses.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

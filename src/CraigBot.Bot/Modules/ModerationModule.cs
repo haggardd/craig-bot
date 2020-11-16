@@ -13,8 +13,7 @@ namespace CraigBot.Bot.Modules
         // TODO: Might also be a good idea to send a message into the chat for certain actions
 
         #region Commands
-    
-        // TODO: There seems to be an issue with kick not finding users that exist
+        
         [Command("kick")]
         [Summary("Kicks the given user from the server.")]
         [RequireUserPermission(GuildPermission.Administrator)]
