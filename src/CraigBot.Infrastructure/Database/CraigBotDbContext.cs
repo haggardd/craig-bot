@@ -9,6 +9,7 @@ namespace CraigBot.Infrastructure.Database
     {
         public DbSet<FortuneCookie> FortuneCookies { get; set; }
         public DbSet<EightBallResponse> EightBallResponses { get; set; }
+        public DbSet<Bank> Banks { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,20 +28,32 @@ namespace CraigBot.Infrastructure.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<FortuneCookie>().ToTable("FortuneCookies", "test");
+            // Fortune Cookie
+            modelBuilder.Entity<FortuneCookie>().ToTable("FortuneCookie");
             modelBuilder.Entity<FortuneCookie>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Fortune).IsRequired();
             });
             
-            modelBuilder.Entity<EightBallResponse>().ToTable("EightBallResponses", "test");
+            // Eight-Ball Response
+            modelBuilder.Entity<EightBallResponse>().ToTable("EightBallResponse");
             modelBuilder.Entity<EightBallResponse>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Response).IsRequired();
             });
             
+            // Bank
+            modelBuilder.Entity<Bank>().ToTable("Bank");
+            modelBuilder.Entity<Bank>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.UserId).IsRequired();
+                entity.Property(e => e.Username).IsRequired();
+                entity.Property(e => e.Balance).IsRequired();
+            });
+
             base.OnModelCreating(modelBuilder);
         }
     }

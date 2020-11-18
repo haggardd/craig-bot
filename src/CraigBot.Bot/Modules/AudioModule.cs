@@ -6,7 +6,7 @@ using Discord.Commands;
 
 namespace CraigBot.Bot.Modules
 {
-    // TODO: `opus` is failing to be recognised when running on the pi, something to look into
+    // TODO: `opus` is failing to be recognised when running on the pi, probably because it's not complied for linux
     /* TODO: Finish implementing this
      * Things to consider:
      * - Get basic YouTube playback working first

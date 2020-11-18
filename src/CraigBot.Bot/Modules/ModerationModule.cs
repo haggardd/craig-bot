@@ -10,7 +10,7 @@ namespace CraigBot.Bot.Modules
     [RequireContext(ContextType.Guild)]
     public class ModerationModule : ModuleBase<SocketCommandContext>
     {
-        // TODO: Might also be a good idea to send a message into the chat for certain actions
+        // TODO: Might be a good idea to send a message into the chat for certain commands
 
         #region Commands
         
