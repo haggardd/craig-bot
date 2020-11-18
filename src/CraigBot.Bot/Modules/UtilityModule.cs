@@ -34,8 +34,7 @@ namespace CraigBot.Bot.Modules
             await ReplyAsync("", false, embed.Build());
         }
         
-        // TODO: Could benefit from added more fields, i.e. current game / music, etc...
-        // TODO: User status seems to read `Offline` even when the user is online
+        // TODO: Could benefit from adding more fields, i.e. current game, music, etc...
         [Command("inspect")] 
         [Summary("Displays information about a given user.")]
         [Example("inspect @Craig")]
