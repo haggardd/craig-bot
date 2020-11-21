@@ -15,32 +15,32 @@ namespace CraigBot.Bot.Services
         private readonly IServiceProvider _provider;
         private readonly DiscordSocketClient _discord;
         private readonly CommandService _commandService;
-        private readonly BotOptions _botOptions;
+        private readonly BotOptions _options;
 
         public StartupService(
             IServiceProvider provider,
             DiscordSocketClient discord,
             CommandService commandService,
-            IOptions<BotOptions> botOptions)
+            IOptions<BotOptions> options)
         {
             _provider = provider;
             _discord = discord;
             _commandService = commandService;
-            _botOptions = botOptions.Value;
+            _options = options.Value;
         }
 
         public async Task StartClient()
         {
-            if (string.IsNullOrWhiteSpace(_botOptions.Token))
+            if (string.IsNullOrWhiteSpace(_options.Token))
             {
                 throw new Exception("Your token is missing or configured incorrectly.");
             }
 
-            await _discord.LoginAsync(TokenType.Bot, _botOptions.Token);
+            await _discord.LoginAsync(TokenType.Bot, _options.Token);
             await _discord.StartAsync();
-            await _discord.SetActivityAsync(new Game($"{_botOptions.Prefix}help", ActivityType.Listening));
+            await _discord.SetActivityAsync(new Game($"{_options.Prefix}help", ActivityType.Listening));
             
-            // TODO: Figure a way to determine if the module is disable, use the new flags in the options
+            // TODO: Figure a way to determine if the module is disabled, use the new flags in the options
             await _commandService.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
         }
     }

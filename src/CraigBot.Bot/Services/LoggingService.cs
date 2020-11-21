@@ -6,6 +6,7 @@ using Discord;
 
 namespace CraigBot.Bot.Services
 {
+    // TODO: Need more logging for non-Discord.net related stuff
     public class LoggingService : ILoggingService
     {
         private string LogDirectory { get; }

@@ -16,10 +16,10 @@
       <None Update="Repositories\Data\eightBallResponses.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Data\fortunes.json">
+      <None Update="Database\Data\fortunes.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Data\eightBallResponses.json">
+      <None Update="Database\Data\eightBallResponses.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

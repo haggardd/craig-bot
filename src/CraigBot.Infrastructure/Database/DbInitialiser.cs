@@ -34,7 +34,7 @@ namespace CraigBot.Infrastructure.Database
 
         private static async Task<IEnumerable<T>> DeserializeJsonCollection<T>(string fileName)
         {
-            var json = await File.ReadAllTextAsync($"Data/{fileName}.json");
+            var json = await File.ReadAllTextAsync($"Database/Data/{fileName}.json");
             var data = JsonConvert.DeserializeObject<IEnumerable<T>>(json);
 
             return data;

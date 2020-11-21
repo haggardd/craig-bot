@@ -44,13 +44,13 @@ namespace CraigBot.Bot.Services
             
             var argPos = 0;
             
-            if (!message.HasStringPrefix(_options.Prefix, ref argPos) ||
-                message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
+            if (!message.HasStringPrefix(_options.Prefix, ref argPos))
             {
                 return;
             }
             
             var context = new SocketCommandContext(_discord, message);
+            
             await _commandService.ExecuteAsync(context, argPos, _provider);
         }
 
