@@ -1,6 +1,6 @@
 ﻿namespace CraigBot.Infrastructure.Tests.Repositories
 {
-    public class BankRepositoryTests
+    public class BankAccountRepositoryTests
     {
         // TODO: Finish adding tests
     }

@@ -9,11 +9,11 @@ namespace CraigBot.Infrastructure.Database
     {
         public DbSet<FortuneCookie> FortuneCookies { get; set; }
         public DbSet<EightBallResponse> EightBallResponses { get; set; }
-        public DbSet<Bank> Banks { get; set; }
+        public DbSet<BankAccount> BankAccounts { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var databasePath = Path.Combine(AppContext.BaseDirectory, "Data");
+            var databasePath = Path.Combine(AppContext.BaseDirectory, "Database");
 
             if (!Directory.Exists(databasePath))
             {
@@ -44,9 +44,9 @@ namespace CraigBot.Infrastructure.Database
                 entity.Property(e => e.Response).IsRequired();
             });
             
-            // Bank
-            modelBuilder.Entity<Bank>().ToTable("Bank");
-            modelBuilder.Entity<Bank>(entity =>
+            // Bank Account
+            modelBuilder.Entity<BankAccount>().ToTable("BankAccount");
+            modelBuilder.Entity<BankAccount>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.UserId).IsRequired();

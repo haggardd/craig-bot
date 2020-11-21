@@ -1,12 +1,13 @@
 ﻿{
-  "Bot":
-  {
+  "Bot": {
     "Token": "YOUR BOT TOKEN HERE",
     "Prefix": "!",
-    "DmHelp": false
+    "DmHelp": false,
+    "MessageReward": 10,
+    "StartingBalance": 10000,
+    "Currency": "£"
   },
-  "ModuleFlags":
-  {
+  "ModuleFlags": {
     "Audio": true,
     "Banking": true,
     "Betting": true,

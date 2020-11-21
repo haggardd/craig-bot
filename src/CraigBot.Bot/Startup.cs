@@ -55,17 +55,17 @@ namespace CraigBot.Bot
         {
             var services = new ServiceCollection();
             
-            services.AddDbContext<CraigBotDbContext>(ServiceLifetime.Singleton);
+            services.AddDbContext<CraigBotDbContext>(ServiceLifetime.Transient); // TODO: Still need to look into the lifetime of the context, not sure it's correct
             
             services.AddSingleton<DiscordSocketClient, CraigClient>() // TODO: If these don't get used, might as well go back to using the old ones
                 .AddSingleton<CommandService, CraigCommandService>()
-                .AddSingleton<IFortuneCookieRepository, FortuneCookieRepository>()
-                .AddSingleton<IEightBallResponseRepository, EightBallResponseRepository>()
-                .AddSingleton<IBankRepository, BankRepository>()
+                .AddTransient<IFortuneCookieRepository, FortuneCookieRepository>()
+                .AddTransient<IEightBallResponseRepository, EightBallResponseRepository>()
+                .AddTransient<IBankAccountRepository, BankAccountRepository>()
                 .AddSingleton<ICommandHandler, CommandHandler>()
                 .AddSingleton<IStartupService, StartupService>()
                 .AddSingleton<IAudioService, AudioService>()
-                .AddSingleton<IBankingService, BankingService>()
+                .AddTransient<IBankingService, BankingService>()
                 .AddSingleton<ILoggingService, LoggingService>()
                 .AddSingleton<Random>()
                 .AddSingleton(Configuration);

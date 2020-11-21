@@ -1,6 +1,6 @@
 ﻿namespace CraigBot.Core.Models
 {
-    public class Bank
+    public class BankAccount
     {
         public int Id { get; set; }
 
