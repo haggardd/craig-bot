@@ -10,7 +10,9 @@ namespace CraigBot.Core.Services
         
         Task<BankAccount> CreateAccount(SocketUser user);
 
-        Task<BankAccount> DepositToAccount(SocketUser user, decimal amount);
+        Task<BankAccount> DepositToAccount(BankAccount account, decimal amount);
+        
+        Task<BankAccount> WithdrawFromAccount(BankAccount account, decimal amount);
 
         Task OnMessageReceived(SocketMessage socketMessage);
     }
