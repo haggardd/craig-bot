@@ -46,12 +46,19 @@ namespace CraigBot.Bot.Services
             return newAccount;
         }
 
-        public async Task<BankAccount> DepositToAccount(SocketUser user, decimal amount)
+        public async Task<BankAccount> DepositToAccount(BankAccount account, decimal amount)
         {
-            var account = await GetAccount(user);
-
             account.Balance += amount;
 
+            var updatedAccount = await _bankAccountRepository.Update(account);
+
+            return updatedAccount;
+        }
+
+        public async Task<BankAccount> WithdrawFromAccount(BankAccount account, decimal amount)
+        {
+            account.Balance -= amount;
+            
             var updatedAccount = await _bankAccountRepository.Update(account);
 
             return updatedAccount;
@@ -73,7 +80,9 @@ namespace CraigBot.Bot.Services
                 return;
             }
 
-            await DepositToAccount(message.Author, _options.MessageReward);
+            var account = await GetAccount(message.Author);
+
+            await DepositToAccount(account, _options.MessageReward);
         }
     }
 }

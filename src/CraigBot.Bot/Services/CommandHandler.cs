@@ -74,7 +74,7 @@ namespace CraigBot.Bot.Services
                 CommandError.MultipleMatches =>
                     $"Multiple matches! Multiple matches were found for `{_options.Prefix}{command.Value.Name}`, use `{_options.Prefix}help {command.Value.Name}` for info on specific differences.",
                 CommandError.ParseFailed =>
-                    $"Parsing failure! `{_options.Prefix}{command.Value.Name}` failed to parse, this has been logged.",
+                    $"Parsing failure! `{_options.Prefix}{command.Value.Name}` failed to parse, you likely used an incorrect parameter type. `{_options.Prefix}help {command.Value.Name}` for more info.",
                 CommandError.Unsuccessful =>
                     $"Unsuccessful! `{_options.Prefix}{command.Value.Name}` failed to execute successfully, this has been logged.",
                 CommandError.Exception => 
