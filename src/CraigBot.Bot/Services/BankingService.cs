@@ -66,6 +66,11 @@ namespace CraigBot.Bot.Services
 
         public async Task OnMessageReceived(SocketMessage socketMessage)
         {
+            if (_options.MessageReward < 0.01M)
+            {
+                return;
+            }
+
             var message = socketMessage as SocketUserMessage;
 
             if (message == null || message.Author.Id == _discord.CurrentUser.Id)

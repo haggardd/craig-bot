@@ -13,8 +13,8 @@ namespace CraigBot.Bot.Modules
     {
         #region Commands
         
-        /* TODO: Finish implementing this
-         * Things to consider:
+        // TODO: Finish implementing this
+        /* Things to consider:
          * - Calculate votes (this is proving to be tricky!)
          * - Check who has already voted */
         [Command("poll")]
@@ -51,7 +51,8 @@ namespace CraigBot.Bot.Modules
             
             for (var i = 0; i < options.Length; i++)
             {
-                await pollMessage.AddReactionAsync(emotes[i]); // TODO: Might be able to use `AddReactionsAsync` here instead
+                // TODO: Might be able to use `AddReactionsAsync` here instead
+                await pollMessage.AddReactionAsync(emotes[i]); 
             }
             
             await Task.Delay(duration * 1000);
