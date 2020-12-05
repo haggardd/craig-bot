@@ -3,6 +3,7 @@ using CraigBot.Bot.Configuration;
 using CraigBot.Core.Models;
 using CraigBot.Core.Repositories;
 using CraigBot.Core.Services;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Options;
@@ -25,14 +26,14 @@ namespace CraigBot.Bot.Services
             _discord.MessageReceived += OnMessageReceived;
         }
 
-        public async Task<BankAccount> GetAccount(SocketUser user)
+        public async Task<BankAccount> GetAccountOrCreateAccount(IUser user)
         {
             var account = await _bankAccountRepository.GetByUserId(user.Id) ?? await CreateAccount(user);
 
             return account;
         }
 
-        public async Task<BankAccount> CreateAccount(SocketUser user)
+        public async Task<BankAccount> CreateAccount(IUser user)
         {
             var account = new BankAccount
             {
@@ -46,7 +47,7 @@ namespace CraigBot.Bot.Services
             return newAccount;
         }
 
-        public async Task<BankAccount> DepositToAccount(BankAccount account, decimal amount)
+        public async Task<BankAccount> Deposit(BankAccount account, decimal amount)
         {
             account.Balance += amount;
 
@@ -55,7 +56,7 @@ namespace CraigBot.Bot.Services
             return updatedAccount;
         }
 
-        public async Task<BankAccount> WithdrawFromAccount(BankAccount account, decimal amount)
+        public async Task<BankAccount> Withdraw(BankAccount account, decimal amount)
         {
             account.Balance -= amount;
             
@@ -64,30 +65,29 @@ namespace CraigBot.Bot.Services
             return updatedAccount;
         }
 
-        public async Task OnMessageReceived(SocketMessage socketMessage)
+        public async Task OnMessageReceived(IMessage message)
         {
             if (_options.MessageReward < 0.01M)
             {
                 return;
             }
 
-            var message = socketMessage as SocketUserMessage;
-
-            if (message == null || message.Author.Id == _discord.CurrentUser.Id)
+            if (!(message is SocketUserMessage userMessage) 
+                || userMessage.Author.Id == _discord.CurrentUser.Id)
             {
                 return;
             }
             
             var argPos = 0;
             
-            if (message.HasStringPrefix(_options.Prefix, ref argPos))
+            if (userMessage.HasStringPrefix(_options.Prefix, ref argPos))
             {
                 return;
             }
 
-            var account = await GetAccount(message.Author);
+            var account = await GetAccountOrCreateAccount(userMessage.Author);
 
-            await DepositToAccount(account, _options.MessageReward);
+            await Deposit(account, _options.MessageReward);
         }
     }
 }

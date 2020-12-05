@@ -1,111 +1,136 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CraigBot.Bot.Common;
+using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
 
 namespace CraigBot.Bot.Modules
 {
-    // TODO: The current poll command embeds need to look better
+    // TODO: The current poll command embed needs to look better
     [Summary("Poll Commands")]
     [RequireContext(ContextType.Guild)]
-    public class PollModule : ModuleBase<SocketCommandContext>
+    public class PollModule : CraigBotBaseModule
     {
+        private readonly IPollService _pollService;
+
+        public PollModule(IPollService pollService)
+        {
+            _pollService = pollService;
+        }
+        
         #region Commands
         
         // TODO: Finish implementing this
-        /* Things to consider:
-         * - Calculate votes (this is proving to be tricky!)
-         * - Check who has already voted */
         [Command("poll")]
-        [Summary("Creates a poll with a set duration and up to 10 options.")]
+        [Summary("Creates a poll with a set duration and multiple choices.")]
         [Example("poll \"What shall we play?\" 10 \"CS:GO\" \"Red Dead\" \"Sea of Thieves\"")]
         public async Task Poll([Summary("The question you'd like to propose in the poll.")] string question, 
             [Summary("The amount of seconds to pass before the winner is decided.")] int duration, 
-            [Summary("The options to pick from during the poll.")] params string[] options)
+            [Summary("The choices to pick from during the poll.")] params string[] choices)
         {
-            if (options.Length <= 1 || options.Length > 10)
+            if (IsActivePoll())
             {
-                await ReplyAsync("To start a poll you need between 2 and 10 options to choose from.");
+                await ReplyAsync("There is already an active poll, either end the current poll or wait for it to end.");
+                return;
+            }
+            
+            if (choices.Length < 2)
+            {
+                await ReplyAsync("To start a poll you need at least 2 choices to choose from.");
                 return;
             }
 
-            var pollEmbed = new EmbedBuilder()
-                .WithColor(Color.Gold)
+            var pollEmbed = BasePollEmbed()
                 .WithTitle(question)
-                .WithAuthor(Context.User)
-                .WithFooter(f => f.Text = $"Poll ends {duration} seconds from message sent")
-                .WithCurrentTimestamp();
+                .WithDescription("Use `!vote` with choice number to cast your vote!")
+                .WithFooter(f => f.Text = $"Poll ends {duration} seconds from message sent");
+
+            string choicesText = null;
             
-            string optionsText = null;
-            
-            for (var i = 0; i < options.Length; i++)
+            for (var i = 0; i < choices.Length; i++)
             {
-                optionsText += $"`{i + 1})` {options[i]} \n";
+                choicesText += $"`{i + 1})` {choices[i]} \n";
             }
             
-            pollEmbed.AddField("Options: ", optionsText);
+            pollEmbed.AddField("Choices: ", choicesText);
             
             var pollMessage = await ReplyAsync("", false, pollEmbed.Build());
-            var emotes = _emojiNumbers;
             
-            for (var i = 0; i < options.Length; i++)
-            {
-                // TODO: Might be able to use `AddReactionsAsync` here instead
-                await pollMessage.AddReactionAsync(emotes[i]); 
-            }
-            
-            await Task.Delay(duration * 1000);
-            
-            var pollEndEmbed = new EmbedBuilder()
-                .WithColor(Color.Gold)
-                .WithTitle("Poll Over!")
-                .WithDescription(question)
-                .AddField("Most Votes Received: ", options[0])
-                .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl());
-            
-            await ReplyAsync("", false, pollEndEmbed.Build());
+            _pollService.CreateAndStart(pollMessage, question, duration, choices);
+
+            // TODO: Need to think of how the end poll embed is going to be sent
+            // TODO: Need to add a check for finished polls with no votes or multiple winners
         }
-    
-        [Command("poll")]
-        [Summary("Creates a basic yes/no poll.")]
-        [Example("poll Should we ban Craig?")]
-        public async Task Poll([Remainder][Summary("The yes/no question you'd like to propose in the poll.")] string question)
+
+        [Command("vote")]
+        [Summary("Casts a vote during a poll.")]
+        [Example("vote 1")]
+        public async Task Vote([Summary("The choice you wish to vote for.")] int choice)
         {
-            var pollEmbed = new EmbedBuilder()
-                .WithColor(Color.Gold)
-                .WithTitle(question)
-                .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl());
+            var userId = Context.User.Id;
+            
+            // TODO: Need to have a think about how error handling is current handled in modules, might be better to move some to the services
+            if (!IsActivePoll())
+            {
+                await ReplyAndAddReactionAsync("There are no active polls.", 
+                    Context.Message, _invalidEmoji);
+                return;
+            }
 
-            var pollMessage = await ReplyAsync("", false, pollEmbed.Build());
+            if (UserHasVoted(userId))
+            {
+                await ReplyAndAddReactionAsync("You've already voted in the current poll.", 
+                    Context.Message, _invalidEmoji);
+                return;
+            }
 
-            await pollMessage.AddReactionsAsync(_emojiThumbs);
+            if (!IsValidVote(choice))
+            {
+                await ReplyAndAddReactionAsync("Invalid choice. Please vote for one of the choices in the poll message.", 
+                    Context.Message, _invalidEmoji);
+                return;
+            }
+
+            _pollService.Vote(userId, choice);
+            
+            await Context.Message.AddReactionAsync(_tickEmoji);
+        }
+        
+        // TODO: Finish this
+        [Command("end")]
+        [Summary("Ends the current poll.")]
+        public async Task End()
+        {
+            if (!IsActivePoll())
+            {
+                await ReplyAsync("There are no active polls.");
+                return;
+            }
+
+            await ReplyAsync("Not implemented yet...");
         }
         
         #endregion
-        
+
         #region Helpers
 
-        private readonly List<IEmote> _emojiNumbers = new List<IEmote>
-        {
-            new Emoji("\u0031\u20E3"),    // 1
-            new Emoji("\u0032\u20E3"), 
-            new Emoji("\u0033\u20E3"),
-            new Emoji("\u0034\u20E3"),
-            new Emoji("\u0035\u20E3"),
-            new Emoji("\u0036\u20E3"),
-            new Emoji("\u0037\u20E3"),
-            new Emoji("\u0038\u20E3"),
-            new Emoji("\u0039\u20E3"),
-            new Emoji("\uD83D\uDD1F")    // 10
-        };
+        private bool IsActivePoll()
+            => _pollService.Current != null && !_pollService.Current.Ended;
         
-        private readonly IEmote[] _emojiThumbs =
-        {
-            new Emoji("\uD83D\uDC4D"),                    // Thumbs up
-            new Emoji("\uD83D\uDC4E"),                    // Thumbs down
-            new Emoji("\uD83E\uDD37\u200D\u2642\uFE0F"),  // Shrug
-        };
+        private bool UserHasVoted(ulong id)
+            => _pollService.Current.Votes.ContainsKey(id);
+        
+        private bool IsValidVote(int choice)
+            => _pollService.Current.Choices.ContainsKey(choice);
+
+        private EmbedBuilder BasePollEmbed()
+            => new EmbedBuilder()
+                .WithColor(Color.Gold)
+                .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl());
+        
+        private readonly Emoji _tickEmoji = new Emoji("\u2705");
+        
+        private readonly Emoji _invalidEmoji = new Emoji("\uD83D\uDEAB");
 
         #endregion
     }

@@ -9,8 +9,6 @@ using Microsoft.Extensions.Options;
 
 namespace CraigBot.Bot.Services
 {
-    // TODO: Add more preconditions for bot and user permissions
-    // TODO: Look into where commands should be preformed, i.e. DMs and channel messages
     public class CommandHandler : ICommandHandler
     {
         private readonly DiscordSocketClient _discord;
@@ -33,23 +31,22 @@ namespace CraigBot.Bot.Services
             _commandService.CommandExecuted += OnCommandExecuted;
         }
 
-        public async Task OnMessageReceived(SocketMessage socketMessage)
+        public async Task OnMessageReceived(IMessage message)
         {
-            var message = socketMessage as SocketUserMessage;
-
-            if (message == null || message.Author.Id == _discord.CurrentUser.Id)
+            if (!(message is SocketUserMessage userMessage) 
+                || userMessage.Author.Id == _discord.CurrentUser.Id)
             {
                 return;
             }
-            
+
             var argPos = 0;
             
-            if (!message.HasStringPrefix(_options.Prefix, ref argPos))
+            if (!userMessage.HasStringPrefix(_options.Prefix, ref argPos))
             {
                 return;
             }
             
-            var context = new SocketCommandContext(_discord, message);
+            var context = new SocketCommandContext(_discord, userMessage);
             
             await _commandService.ExecuteAsync(context, argPos, _provider);
         }
@@ -70,7 +67,7 @@ namespace CraigBot.Bot.Services
                 CommandError.ObjectNotFound => 
                     $"Not found! If you passed in a user, its likely they don't exist. Use `{_options.Prefix}help {command.Value.Name}` for more info on the command you're trying to use.",
                 CommandError.UnmetPrecondition => 
-                    "Unmet precondition! You lack the correct precondition, this is most likely because you lack the correct permissions to use this command.",
+                    "Unmet precondition! You lack the correct precondition, this is most likely because you the bot lack the correct permissions to use this command.",
                 CommandError.MultipleMatches =>
                     $"Multiple matches! Multiple matches were found for `{_options.Prefix}{command.Value.Name}`, use `{_options.Prefix}help {command.Value.Name}` for info on specific differences.",
                 CommandError.ParseFailed =>

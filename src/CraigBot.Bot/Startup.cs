@@ -18,7 +18,7 @@ namespace CraigBot.Bot
     {
         private IConfiguration Configuration { get; }
 
-        public Startup(string[] args)
+        private Startup()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
@@ -29,7 +29,7 @@ namespace CraigBot.Bot
 
         public static async Task RunAsync(string[] args)
         {
-            var startup = new Startup(args);
+            var startup = new Startup();
 
             await startup.RunAsync();
         }
@@ -59,8 +59,8 @@ namespace CraigBot.Bot
             services.AddDbContext<CraigBotDbContext>(ServiceLifetime.Transient);
             
             // TODO: If the custom command service and client don't get used, might as well go back to using the old ones
-            services.AddSingleton<DiscordSocketClient, CraigClient>()
-                .AddSingleton<CommandService, CraigCommandService>()
+            services.AddSingleton<DiscordSocketClient, CraigBotClient>()
+                .AddSingleton<CommandService, CraigBotCommandService>()
                 .AddTransient<IFortuneCookieRepository, FortuneCookieRepository>()
                 .AddTransient<IEightBallResponseRepository, EightBallResponseRepository>()
                 .AddTransient<IBankAccountRepository, BankAccountRepository>()
@@ -68,6 +68,7 @@ namespace CraigBot.Bot
                 .AddSingleton<IStartupService, StartupService>()
                 .AddSingleton<IAudioService, AudioService>()
                 .AddTransient<IBankingService, BankingService>()
+                .AddSingleton<IPollService, PollService>()
                 .AddSingleton<ILoggingService, LoggingService>()
                 .AddSingleton<Random>()
                 .AddSingleton(Configuration);

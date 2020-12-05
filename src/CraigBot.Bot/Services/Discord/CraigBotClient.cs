@@ -4,7 +4,7 @@ using Discord.WebSocket;
 
 namespace CraigBot.Bot.Services.Discord
 {
-    public class CraigClient : DiscordSocketClient
+    public class CraigBotClient : DiscordSocketClient
     {
         private static readonly DiscordSocketConfig Configuration = new DiscordSocketConfig
         {
@@ -13,7 +13,7 @@ namespace CraigBot.Bot.Services.Discord
             AlwaysDownloadUsers = true
         };
         
-        public CraigClient(ILoggingService loggingService) : base(Configuration)
+        public CraigBotClient(ILoggingService loggingService) : base(Configuration)
         {
             Log += loggingService.OnLog;
         }

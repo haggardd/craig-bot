@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CraigBot.Bot.Common;
-using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
@@ -9,7 +8,7 @@ namespace CraigBot.Bot.Modules
 {
     [Summary("Miscellaneous Commands")]
     [RequireContext(ContextType.Guild)]
-    public class MiscellaneousModule : ModuleBase<SocketCommandContext>
+    public class MiscellaneousModule : CraigBotBaseModule
     {
         private readonly Random _random;
 
