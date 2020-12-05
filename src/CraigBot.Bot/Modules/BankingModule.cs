@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using CraigBot.Bot.Common;
 using CraigBot.Bot.Configuration;
 using CraigBot.Core.Models;
 using CraigBot.Core.Services;
@@ -12,7 +13,7 @@ namespace CraigBot.Bot.Modules
 {
     [Summary("Banking Commands")]
     [RequireContext(ContextType.Guild)]
-    public class BankingModule : ModuleBase<SocketCommandContext>
+    public class BankingModule : CraigBotBaseModule
     {
         private readonly IBankingService _bankingService;
         private readonly BotOptions _options;
@@ -29,7 +30,7 @@ namespace CraigBot.Bot.Modules
         [Summary("Provides the user with a bank statement.")]
         public async Task Bank()
         {
-            var account = await _bankingService.GetAccount(Context.User);
+            var account = await _bankingService.GetAccountOrCreateAccount(Context.User);
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Green)
@@ -47,6 +48,9 @@ namespace CraigBot.Bot.Modules
         
         [Command("wire")]
         [Summary("Wires a given amount of funds to another user.")]
+        [Example("wire 10 @Craig")]
+        [Example("wire 1.10 @Craig")]
+        [Example("wire .01 @Craig")]
         public async Task Wire([Summary("The amount of funds you wish to send.")] decimal amount, 
             [Summary("The user you wish to send funds to.")] SocketGuildUser user)
         {
@@ -62,8 +66,8 @@ namespace CraigBot.Bot.Modules
                 return;
             }
             
-            var payerAccount = await _bankingService.GetAccount(Context.User);
-            var payeeAccount = await _bankingService.GetAccount(user);
+            var payerAccount = await _bankingService.GetAccountOrCreateAccount(Context.User);
+            var payeeAccount = await _bankingService.GetAccountOrCreateAccount(user);
 
             if (!CanAffordWithdrawal(payerAccount, amount))
             {
@@ -73,14 +77,18 @@ namespace CraigBot.Bot.Modules
 
             var roundedAmount = Math.Round(amount, 2);
 
-            await _bankingService.WithdrawFromAccount(payerAccount, roundedAmount);
-            await _bankingService.DepositToAccount(payeeAccount, roundedAmount);
+            await _bankingService.Withdraw(payerAccount, roundedAmount);
+            await _bankingService.Deposit(payeeAccount, roundedAmount);
 
             await ReplyAsync($"Transaction successful! {Context.User.Mention} sent `{_options.Currency}{roundedAmount:0.00}` to {user.Mention}.");
         }
         
         [Command("grant")]
         [Summary("Grants a user or yourself with free funds from the magic bank.")]
+        [Example("grant 10 @Craig")]
+        [Example("grant 1.10 @Craig")]
+        [Example("grant .01 @Craig")]
+        [Example("grant 1000.00")]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Grant([Summary("The amount of funds you wish to grant.")] decimal amount, 
             [Summary("The user you wish to receive the grant.")] SocketGuildUser user = null)
@@ -91,11 +99,11 @@ namespace CraigBot.Bot.Modules
                 return;
             }
             
-            var account = await _bankingService.GetAccount(user ?? Context.User);
+            var account = await _bankingService.GetAccountOrCreateAccount(user ?? Context.User);
             
             var roundedAmount = Math.Round(amount, 2);
             
-            await _bankingService.DepositToAccount(account, roundedAmount);
+            await _bankingService.Deposit(account, roundedAmount);
             
             await ReplyAsync($"Grant successful! {(user ?? Context.User).Mention} has been granted `{_options.Currency}{roundedAmount:0.00}`!");
         }

@@ -9,7 +9,7 @@ namespace CraigBot.Bot.Modules
 {
     [Summary("Fun Commands")]
     [RequireContext(ContextType.Guild)]
-    public class FunModule : ModuleBase<SocketCommandContext>
+    public class FunModule : CraigBotBaseModule
     {
         private readonly Random _random;
         private readonly IFortuneCookieRepository _fortuneCookieRepository;

@@ -10,7 +10,7 @@ namespace CraigBot.Bot.Modules
 {
     [Summary("Utility Commands")]
     [RequireContext(ContextType.Guild)]
-    public class UtilityModule : ModuleBase<SocketCommandContext>
+    public class UtilityModule : CraigBotBaseModule
     {
         #region Commands
 
@@ -22,8 +22,7 @@ namespace CraigBot.Bot.Modules
         {
             var created = Context.Guild.CreatedAt.DateTime.ToString(CultureInfo.CurrentCulture);
 
-            var embed = new EmbedBuilder()
-                .WithColor(Color.Blue)
+            var embed = BaseUtilityEmbed()
                 .WithTitle(Context.Guild.Name)
                 .WithDescription(Context.Guild.Description)
                 .WithThumbnailUrl(Context.Guild.IconUrl)
@@ -46,8 +45,7 @@ namespace CraigBot.Bot.Modules
 
             var roles = string.Join(" | ", user.Roles.Select(r => $"`{r.Name}`"));
 
-            var embed = new EmbedBuilder()
-                .WithColor(Color.Blue)
+            var embed = BaseUtilityEmbed()
                 .WithTitle($"{user.Nickname ?? user.Username} - `{user.Status}`")
                 .WithThumbnailUrl(user.GetAvatarUrl())
                 .AddField("Joined", joined, true)
@@ -66,8 +64,7 @@ namespace CraigBot.Bot.Modules
                 ? "None"
                 : $"`{channel.SlowModeInterval}s`";
 
-            var embed = new EmbedBuilder()
-                .WithColor(Color.Blue)
+            var embed = BaseUtilityEmbed()
                 .WithTitle($"#{channel.Name}")
                 .WithDescription(channel.Topic ?? "No topic...")
                 .AddField("Created", channel.CreatedAt.DateTime.ToString(CultureInfo.CurrentCulture))
@@ -87,6 +84,19 @@ namespace CraigBot.Bot.Modules
         [Summary("Replies with the Bot's latency.")]
         public async Task Latency()
             => await ReplyAsync($"Latency: `{Context.Client.Latency}ms`");
+        
+        [Command("git")]
+        [Summary("Replies with the Bot's GitHub repo.")]
+        public async Task Git()
+            => await ReplyAsync("Check out my codebase on Github! https://github.com/haggardd/craig-bot");
+
+        #endregion
+
+        #region Helpers
+
+        private EmbedBuilder BaseUtilityEmbed()
+            => new EmbedBuilder()
+                .WithColor(Color.Blue);
 
         #endregion
     }

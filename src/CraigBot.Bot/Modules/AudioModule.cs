@@ -13,7 +13,7 @@ namespace CraigBot.Bot.Modules
      * - Might want to limit the size of the queue */
     [Summary("Audio Commands")]
     [RequireContext(ContextType.Guild)]
-    public class AudioModule : ModuleBase<SocketCommandContext>
+    public class AudioModule : CraigBotBaseModule
     {
         private readonly IAudioService _audioService;
 

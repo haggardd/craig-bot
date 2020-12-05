@@ -8,9 +8,10 @@ using Microsoft.Extensions.Options;
 
 namespace CraigBot.Bot.Modules
 {
+    // TODO: Need to relay permissions for commands to the user
     [Summary("Help Commands")]
     [RequireContext(ContextType.Guild)]
-    public class HelpModule : ModuleBase<SocketCommandContext>
+    public class HelpModule : CraigBotBaseModule
     {
         private readonly CommandService _commandService;
         private readonly BotOptions _options;
@@ -27,8 +28,7 @@ namespace CraigBot.Bot.Modules
         [Summary("Displays a list of all commands.")]
         public async Task Help()
         {
-            var embed = new EmbedBuilder()
-                .WithColor(Color.Blue)
+            var embed = BaseHelpEmbed()
                 .WithTitle("Commands List")
                 .WithDescription($"Use `{_options.Prefix}help [command]` for info on specific commands.")
                 .WithFooter(f =>
@@ -66,8 +66,7 @@ namespace CraigBot.Bot.Modules
                 return;
             }
             
-            var embed = new EmbedBuilder()
-                .WithColor(Color.Blue)
+            var embed = BaseHelpEmbed()
                 .WithTitle($"*{_options.Prefix}{command}*");
 
             for (var i = 0; i < result.Commands.Count; i++)
@@ -127,7 +126,7 @@ namespace CraigBot.Bot.Modules
         #endregion
 
         #region Helpers
-        
+
         private string GenerateCommandParameterString(CommandInfo command)
         {
             var parameters = string.Join("", 
@@ -137,6 +136,10 @@ namespace CraigBot.Bot.Modules
 
             return $"{_options.Prefix}{command.Aliases.First()}{parameters}";
         }
+
+        private EmbedBuilder BaseHelpEmbed()
+            => new EmbedBuilder()
+                .WithColor(Color.Blue);
 
         #endregion
     }
