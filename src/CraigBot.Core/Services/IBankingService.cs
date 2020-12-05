@@ -1,19 +1,19 @@
 ﻿using System.Threading.Tasks;
 using CraigBot.Core.Models;
-using Discord.WebSocket;
+using Discord;
 
 namespace CraigBot.Core.Services
 {
     public interface IBankingService
     {
-        Task<BankAccount> GetAccount(SocketUser user);
+        Task<BankAccount> GetAccountOrCreateAccount(IUser user);
         
-        Task<BankAccount> CreateAccount(SocketUser user);
+        Task<BankAccount> CreateAccount(IUser user);
 
-        Task<BankAccount> DepositToAccount(BankAccount account, decimal amount);
+        Task<BankAccount> Deposit(BankAccount account, decimal amount);
         
-        Task<BankAccount> WithdrawFromAccount(BankAccount account, decimal amount);
+        Task<BankAccount> Withdraw(BankAccount account, decimal amount);
 
-        Task OnMessageReceived(SocketMessage socketMessage);
+        Task OnMessageReceived(IMessage message);
     }
 }
