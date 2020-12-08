@@ -39,7 +39,9 @@ namespace CraigBot.Bot.Services
             {
                 UserId = user.Id,
                 Username = user.Username,
-                Balance = _options.StartingBalance
+                Balance = _options.StartingBalance < 0.01M 
+                    ? _options.StartingBalance 
+                    : 0.00M
             };
 
             var newAccount = await _bankAccountRepository.Create(account);
