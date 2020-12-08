@@ -94,6 +94,8 @@ namespace CraigBot.Bot.Modules
             _pollService.Vote(userId, choice);
             
             await Context.Message.AddReactionAsync(_tickEmoji);
+            
+            //TODO: Might be able to use this to schedule polls https://github.com/fluentscheduler/FluentScheduler
         }
         
         // TODO: Finish this

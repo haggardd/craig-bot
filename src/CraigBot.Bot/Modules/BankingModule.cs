@@ -32,16 +32,9 @@ namespace CraigBot.Bot.Modules
         {
             var account = await _bankingService.GetAccountOrCreateAccount(Context.User);
 
-            var embed = new EmbedBuilder()
-                .WithColor(Color.Green)
+            var embed = BaseBankingEmbed()
                 .WithTitle("Bank Statement")
-                .WithTimestamp(DateTimeOffset.Now)
-                .AddField("Balance", $"{_options.Currency}{account.Balance:0.00}")
-                .WithFooter(f =>
-                {
-                    f.Text = Context.Message.Author.Username;
-                    f.IconUrl = Context.Message.Author.GetAvatarUrl();
-                });
+                .AddField("Balance", $"{_options.Currency}{account.Balance:0.00}");
 
             await ReplyAsync("", false, embed.Build());
         }
@@ -114,6 +107,11 @@ namespace CraigBot.Bot.Modules
         #region Helpers
 
         private const decimal MinimumAmount = 0.01M;
+        
+        private EmbedBuilder BaseBankingEmbed()
+            => new EmbedBuilder()
+                .WithColor(Color.Green)
+                .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl());
         
         private bool CanAffordWithdrawal(BankAccount account, decimal amount)
             => account.Balance - amount > 0;
