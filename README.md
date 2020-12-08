@@ -13,9 +13,9 @@
   <h2 align="center">
   	Craig Bot
   </h2>
-  <h3 align="center">
+  <p align="center">
   	A configurable multi-purpose Discord bot named Craig, built for self hosting on small guilds.
-  </h3>
+  </p>
 </div>
 
 ## Installation
@@ -47,8 +47,6 @@
 
 There are a number of ways you can host Craig permanently.
 
-#
-
 ## Configuration
 
 Craig can be easily configured to your liking by using a `config.json` file. See [example-config.json](example-config.json) or below for an example and brief explanation of the various settings.
@@ -77,7 +75,7 @@ Craig can be easily configured to your liking by using a `config.json` file. See
 }
 ```
 
-### `Bot`
+### Bot
 
 * `Token` - Your Discord bot's token, this is a requirement for your bot to startup its client
 * `Prefix` - This will decided what symbol will be used to prefix your commands, i.e. `!help`, `-help`, `*help`, etc...
@@ -86,11 +84,9 @@ Craig can be easily configured to your liking by using a `config.json` file. See
 * `StartingBalance` - The starting point/fund balance for new or existing users, setting it to anything less than `0.01` will result in a `0` starting balance
 * `Currency` - The currency symbol you wish to prefix points/funds with, i.e. `£10.00`, `P10.00`, `$10.00`, etc...
 
-### `ModuleFlags`
+### ModuleFlags
 
 You can easily disable modules by setting these to `false`. When disabled, the commands associated with these modules will not be accessible to anyone in guild regardless of roles/ownership. You need at least one module enabled to launch the Craig.
-
-#
 
 ## License
 Distributed under the MIT License. Click [HERE](LICENSE) to view Craig's license.
