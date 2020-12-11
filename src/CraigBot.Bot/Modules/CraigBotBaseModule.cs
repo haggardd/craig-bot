@@ -2,7 +2,7 @@
 using Discord;
 using Discord.Commands;
 
-namespace CraigBot.Bot.Common
+namespace CraigBot.Bot.Modules
 {
     public abstract class CraigBotBaseModule : ModuleBase<SocketCommandContext>
     {

@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using CraigBot.Bot.Configuration;
 using CraigBot.Bot.Modules;
+using CraigBot.Bot.TypeReaders;
 using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
@@ -45,8 +46,10 @@ namespace CraigBot.Bot.Services
             await _discord.StartAsync();
             await _discord.SetActivityAsync(new Game($"{_botOptions.Prefix}help", ActivityType.Listening));
             
-            await _commandService.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
+            _commandService.AddTypeReader(typeof(decimal), new CurrencyTypeReader());
             
+            await _commandService.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
+
             await CheckModuleFlags();
 
             if (!_commandService.Modules.Any())
