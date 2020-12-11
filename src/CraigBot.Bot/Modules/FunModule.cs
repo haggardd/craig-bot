@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CraigBot.Bot.Common;
+using CraigBot.Bot.Attributes;
 using CraigBot.Core.Repositories;
 using Discord.Commands;
 

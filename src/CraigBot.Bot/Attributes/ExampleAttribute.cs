@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CraigBot.Bot.Common
+namespace CraigBot.Bot.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     internal class ExampleAttribute : Attribute
