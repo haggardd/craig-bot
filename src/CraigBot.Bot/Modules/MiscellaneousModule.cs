@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CraigBot.Bot.Common;
+using CraigBot.Bot.Attributes;
 using Discord.Commands;
 using Discord.WebSocket;
 

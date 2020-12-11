@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using CraigBot.Bot.Common;
+﻿using System.Threading.Tasks;
+using CraigBot.Bot.Attributes;
 using CraigBot.Bot.Configuration;
-using CraigBot.Core.Models;
+using CraigBot.Bot.Helpers;
 using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
@@ -53,27 +52,25 @@ namespace CraigBot.Bot.Modules
                 return;
             }
             
-            if (amount < MinimumAmount)
+            if (BankingHelpers.BelowMinimum(amount))
             {
-                await ReplyAsync($"The minimum amount you can send is `{_options.Currency}{MinimumAmount}`!");
+                await ReplyAsync($"The minimum amount you can send is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
                 return;
             }
             
             var payerAccount = await _bankingService.GetAccountOrCreateAccount(Context.User);
             var payeeAccount = await _bankingService.GetAccountOrCreateAccount(user);
 
-            if (!CanAffordWithdrawal(payerAccount, amount))
+            if (!BankingHelpers.CanAfford(payerAccount, amount))
             {
                 await ReplyAsync("You don't have enough funds to make that transaction!");
                 return;
             }
 
-            var roundedAmount = Math.Round(amount, 2);
+            await _bankingService.Withdraw(payerAccount, amount);
+            await _bankingService.Deposit(payeeAccount, amount);
 
-            await _bankingService.Withdraw(payerAccount, roundedAmount);
-            await _bankingService.Deposit(payeeAccount, roundedAmount);
-
-            await ReplyAsync($"Transaction successful! {Context.User.Mention} sent `{_options.Currency}{roundedAmount:0.00}` to {user.Mention}.");
+            await ReplyAsync($"Transaction successful! {Context.User.Mention} sent `{_options.Currency}{amount:0.00}` to {user.Mention}.");
         }
         
         [Command("grant")]
@@ -86,35 +83,27 @@ namespace CraigBot.Bot.Modules
         public async Task Grant([Summary("The amount of funds you wish to grant.")] decimal amount, 
             [Summary("The user you wish to receive the grant.")] SocketGuildUser user = null)
         {
-            if (amount < MinimumAmount)
+            if (BankingHelpers.BelowMinimum(amount))
             {
-                await ReplyAsync($"The minimum amount you can grant is `{_options.Currency}{MinimumAmount}`!");
+                await ReplyAsync($"The minimum amount you can grant is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
                 return;
             }
             
             var account = await _bankingService.GetAccountOrCreateAccount(user ?? Context.User);
+
+            await _bankingService.Deposit(account, amount);
             
-            var roundedAmount = Math.Round(amount, 2);
-            
-            await _bankingService.Deposit(account, roundedAmount);
-            
-            await ReplyAsync($"Grant successful! {(user ?? Context.User).Mention} has been granted `{_options.Currency}{roundedAmount:0.00}`!");
+            await ReplyAsync($"Grant successful! {(user ?? Context.User).Mention} has been granted `{_options.Currency}{amount:0.00}`!");
         }
         
         #endregion
-
-        // TODO: Might be a good idea to separate these into a helper / extensions class
+        
         #region Helpers
 
-        private const decimal MinimumAmount = 0.01M;
-        
         private EmbedBuilder BaseBankingEmbed()
             => new EmbedBuilder()
                 .WithColor(Color.Green)
                 .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl());
-        
-        private bool CanAffordWithdrawal(BankAccount account, decimal amount)
-            => account.Balance - amount > 0;
 
         #endregion
     }

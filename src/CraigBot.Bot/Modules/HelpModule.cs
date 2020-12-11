@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using CraigBot.Bot.Common;
+using CraigBot.Bot.Attributes;
 using CraigBot.Bot.Configuration;
 using Discord;
 using Discord.Commands;
@@ -55,7 +55,7 @@ namespace CraigBot.Bot.Modules
         [Command("help")]
         [Summary("Gives information on specific commands.")]
         [Example("help poll")]
-        public async Task Help([Summary("The command name you wish to get more information about.")] 
+        public async Task Help([Remainder] [Summary("The command name you wish to get more information about.")] 
             string command)
         {
             var result = _commandService.Search(Context, command);

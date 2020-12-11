@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using CraigBot.Bot.Common;
+using CraigBot.Bot.Attributes;
 using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
