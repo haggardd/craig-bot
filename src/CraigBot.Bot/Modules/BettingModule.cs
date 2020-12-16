@@ -27,8 +27,7 @@ namespace CraigBot.Bot.Modules
         }
 
         #region Commands
-
-        // TODO: Might be possible to create a TypeReader for rounded decimals
+        
         [Command("coin")]
         [Summary("Bet on a coin flip.")]
         [Example("bet flip heads 10")]
@@ -91,7 +90,6 @@ namespace CraigBot.Bot.Modules
 
         private async Task<bool> CanMakeBet(BankAccount account, decimal bet)
         {
-            // TODO: Should definitely look at adding these to the banking service or a helper class
             if (BankingHelpers.BelowMinimum(bet))
             {
                 await ReplyAsync($"The minimum amount you can bet is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");

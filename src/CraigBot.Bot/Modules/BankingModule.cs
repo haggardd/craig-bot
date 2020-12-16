@@ -61,7 +61,7 @@ namespace CraigBot.Bot.Modules
             var payerAccount = await _bankingService.GetAccountOrCreateAccount(Context.User);
             var payeeAccount = await _bankingService.GetAccountOrCreateAccount(user);
 
-            if (!BankingHelpers.CanAfford(payerAccount, amount))
+            if (!payerAccount.CanAfford(amount))
             {
                 await ReplyAsync("You don't have enough funds to make that transaction!");
                 return;
