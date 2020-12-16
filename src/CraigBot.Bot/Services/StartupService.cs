@@ -79,10 +79,20 @@ namespace CraigBot.Bot.Services
             {
                 await _commandService.RemoveModuleAsync<FunModule>();
             }
+
+            if (!_moduleFlags.Game)
+            {
+                await _commandService.RemoveModuleAsync<GameModule>();
+            }
             
             if (!_moduleFlags.Help)
             {
                 await _commandService.RemoveModuleAsync<HelpModule>();
+            }
+
+            if (!_moduleFlags.Image)
+            {
+                await _commandService.RemoveModuleAsync<ImageModule>();
             }
             
             if (!_moduleFlags.Miscellaneous)
@@ -98,6 +108,11 @@ namespace CraigBot.Bot.Services
             if (!_moduleFlags.Poll)
             {
                 await _commandService.RemoveModuleAsync<PollModule>();
+            }
+
+            if (!_moduleFlags.Shop)
+            {
+                await _commandService.RemoveModuleAsync<ShopModule>();
             }
             
             if (!_moduleFlags.Utility)

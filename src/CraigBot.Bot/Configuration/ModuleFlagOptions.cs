@@ -12,7 +12,11 @@
         
         public bool Fun { get; set; }
         
+        public bool Game { get; set; }
+        
         public bool Help { get; set; }
+        
+        public bool Image { get; set; }
         
         public bool Miscellaneous { get; set; }
         
@@ -20,6 +24,8 @@
 
         public bool Poll { get; set; }
 
+        public bool Shop { get; set; }
+        
         public bool Utility { get; set; }
     }
 }
