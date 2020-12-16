@@ -1,12 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using CraigBot.Bot.Attributes;
+using CraigBot.Bot.Helpers;
 using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
 
 namespace CraigBot.Bot.Modules
 {
-    // TODO: The current poll command embed needs to look better
     [Summary("Poll Commands")]
     [RequireContext(ContextType.Guild)]
     public class PollModule : CraigBotBaseModule
@@ -20,7 +21,6 @@ namespace CraigBot.Bot.Modules
         
         #region Commands
         
-        // TODO: Finish implementing this
         [Command("poll")]
         [Summary("Creates a poll with a set duration and multiple choices.")]
         [Example("poll \"What shall we play?\" 10 \"CS:GO\" \"Red Dead\" \"Sea of Thieves\"")]
@@ -28,7 +28,7 @@ namespace CraigBot.Bot.Modules
             [Summary("The amount of seconds to pass before the winner is decided.")] int duration, 
             [Summary("The choices to pick from during the poll.")] params string[] choices)
         {
-            if (IsActivePoll())
+            if (_pollService.Current.IsPollActive())
             {
                 await ReplyAsync("There is already an active poll, either end the current poll or wait for it to end.");
                 return;
@@ -40,26 +40,26 @@ namespace CraigBot.Bot.Modules
                 return;
             }
 
-            var pollEmbed = BasePollEmbed()
-                .WithTitle(question)
-                .WithDescription("Use `!vote` with choice number to cast your vote!")
-                .WithFooter(f => f.Text = $"Poll ends {duration} seconds from message sent");
-
-            string choicesText = null;
+            var choicesText = "";
             
             for (var i = 0; i < choices.Length; i++)
             {
                 choicesText += $"`{i + 1})` {choices[i]} \n";
             }
             
-            pollEmbed.AddField("Choices: ", choicesText);
-            
-            var pollMessage = await ReplyAsync("", false, pollEmbed.Build());
-            
-            _pollService.CreateAndStart(pollMessage, question, duration, choices);
+            var pollEmbed = BasePollEmbed()
+                .WithTitle(question)
+                .WithDescription("Use `!vote` with choice number to cast your vote!")
+                .WithFooter(f => f.Text = $"Poll ends {duration} seconds from message sent")
+                .AddField("Choices: ", choicesText);
 
-            // TODO: Need to think of how the end poll embed is going to be sent
-            // TODO: Need to add a check for finished polls with no votes or multiple winners
+            await ReplyAsync("", false, pollEmbed.Build());
+            
+            _pollService.Create(question, choices);
+            
+            await Task.Delay(duration * 1000);
+            
+            await EndPoll();
         }
 
         [Command("vote")]
@@ -70,21 +70,21 @@ namespace CraigBot.Bot.Modules
             var userId = Context.User.Id;
             
             // TODO: Need to have a think about how error handling is current handled in modules, might be better to move some to the services
-            if (!IsActivePoll())
+            if (!_pollService.Current.IsPollActive())
             {
                 await ReplyAndAddReactionAsync("There are no active polls.", 
                     Context.Message, _invalidEmoji);
                 return;
             }
 
-            if (UserHasVoted(userId))
+            if (_pollService.Current.HasUserVoted(userId))
             {
                 await ReplyAndAddReactionAsync("You've already voted in the current poll.", 
                     Context.Message, _invalidEmoji);
                 return;
             }
 
-            if (!IsValidVote(choice))
+            if (!_pollService.Current.IsValidVote(choice))
             {
                 await ReplyAndAddReactionAsync("Invalid choice. Please vote for one of the choices in the poll message.", 
                     Context.Message, _invalidEmoji);
@@ -94,37 +94,59 @@ namespace CraigBot.Bot.Modules
             _pollService.Vote(userId, choice);
             
             await Context.Message.AddReactionAsync(_tickEmoji);
-            
-            //TODO: Might be able to use this to schedule polls https://github.com/fluentscheduler/FluentScheduler
         }
         
-        // TODO: Finish this
         [Command("end")]
         [Summary("Ends the current poll.")]
         public async Task End()
         {
-            if (!IsActivePoll())
+            if (!_pollService.Current.IsPollActive())
             {
                 await ReplyAsync("There are no active polls.");
                 return;
             }
 
-            await ReplyAsync("Not implemented yet...");
+            await EndPoll();
         }
         
         #endregion
 
         #region Helpers
 
-        private bool IsActivePoll()
-            => _pollService.Current != null && !_pollService.Current.Ended;
-        
-        private bool UserHasVoted(ulong id)
-            => _pollService.Current.Votes.ContainsKey(id);
-        
-        private bool IsValidVote(int choice)
-            => _pollService.Current.Choices.ContainsKey(choice);
+        private async Task EndPoll()
+        {
+            if (!_pollService.Current.IsPollActive())
+            {
+                return;
+            }
+            
+            var results = _pollService.CalculateResults();
+            
+            var resultsText = "";
+            
+            if (results.Any())
+            {
+                for (var i = 0; i < results.Count; i++)
+                {
+                    var key = results.ElementAt(i).Key;
+                    resultsText += $"• {_pollService.Current.Choices[key]} -- `{results.ElementAt(i).Value}`\n";
+                }
+            }
+            else
+            {
+                resultsText = "No votes were cast!";
+            }
 
+            var pollOverEmbed = BasePollEmbed()
+                .WithTitle("Poll over!")
+                .WithDescription(_pollService.Current.Question)
+                .AddField("Vote Results", resultsText);
+
+            await ReplyAsync("", false, pollOverEmbed.Build());
+            
+            _pollService.EndCurrent();
+        }
+        
         private EmbedBuilder BasePollEmbed()
             => new EmbedBuilder()
                 .WithColor(Color.Gold)

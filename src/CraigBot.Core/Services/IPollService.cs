@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Timers;
 using CraigBot.Core.Models;
-using Discord;
 
 namespace CraigBot.Core.Services
 {
@@ -9,14 +7,12 @@ namespace CraigBot.Core.Services
     {
         Poll Current { get; set; }
         
-        void CreateAndStart(IMessage message, string question, double duration, IEnumerable<string> choices);
+        void Create(string question, IEnumerable<string> choices);
 
         void EndCurrent();
 
-        Dictionary<int, string> CalculateResults();
+        Dictionary<int, int> CalculateResults();
 
         void Vote(ulong userId, int choice);
-
-        void OnTimeout(object source, ElapsedEventArgs eventArgs);
     }
 }

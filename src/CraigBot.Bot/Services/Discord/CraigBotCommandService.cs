@@ -10,7 +10,7 @@ namespace CraigBot.Bot.Services.Discord
         {
             LogLevel = LogSeverity.Verbose,
             // TODO: Check if this is needed and visa versa
-            DefaultRunMode = RunMode.Async 
+            DefaultRunMode = RunMode.Async
         };
         
         public CraigBotCommandService(ILoggingService loggingService) : base(Configuration)

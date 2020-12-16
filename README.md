@@ -71,10 +71,13 @@ Craig can be easily configured to your liking by using a `config.json` file. See
     "Banking": true,
     "Betting": true,
     "Fun": true,
+    "Game": true,
     "Help": true,
+    "Image": true,
     "Miscellaneous": true,
     "Moderation": true,
     "Poll": true,
+    "Shop": true,
     "Utility": true
   }
 }
