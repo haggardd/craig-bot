@@ -57,6 +57,8 @@ namespace CraigBot.Bot
             
             // TODO: Still need to look into the lifetime of the context, not sure it's correct
             services.AddDbContext<CraigBotDbContext>(ServiceLifetime.Transient);
+
+            services.AddHttpClient<IImageService, ImageService>();
             
             // TODO: If the custom command service and client don't get used, might as well go back to using the old ones
             services.AddSingleton<DiscordSocketClient, CraigBotClient>()
@@ -75,6 +77,7 @@ namespace CraigBot.Bot
 
             services.AddOptions()
                 .Configure<BotOptions>(Configuration.GetSection(BotOptions.ConfigurationHeader))
+                .Configure<ApiOptions>(Configuration.GetSection(ApiOptions.ConfigurationHeader))
                 .Configure<ModuleFlagOptions>(Configuration.GetSection(ModuleFlagOptions.ConfigurationHeader));
 
             return services;
