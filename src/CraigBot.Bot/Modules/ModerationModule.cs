@@ -6,6 +6,7 @@ using Discord.WebSocket;
 
 namespace CraigBot.Bot.Modules
 {
+    // TODO: Need to make sure these commands can't be executed with @Craig
     [Summary("Moderation Commands")]
     [RequireContext(ContextType.Guild)]
     public class ModerationModule : CraigBotBaseModule
