@@ -4,7 +4,6 @@ using Discord.Commands;
 
 namespace CraigBot.Bot.Modules
 {
-    // TODO: Finish implementing this
     [Summary("Image Commands")]
     [RequireContext(ContextType.Guild)]
     public class ImageModule : CraigBotBaseModule
@@ -30,7 +29,20 @@ namespace CraigBot.Bot.Modules
         [Command("Cat")]
         [Summary("Replies with a random cat image.")]
         public async Task Cat()
-            => await ReplyAsync("Not implemented!");
+        {
+            var imageUrl = await _imageService.GetRandomCat();
+            
+            await ReplyAsync(imageUrl);
+        }
+        
+        [Command("Fox")]
+        [Summary("Replies with a random fox image.")]
+        public async Task Fox()
+        {
+            var imageUrl = await _imageService.GetRandomFox();
+            
+            await ReplyAsync(imageUrl);
+        }
 
         #endregion
     }

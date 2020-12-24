@@ -61,6 +61,19 @@ namespace CraigBot.Bot.Modules
             
             await EndPoll();
         }
+        
+        [Command("poll")]
+        [Summary("Creates a simple yes/no poll.")]
+        [Example("poll Should we ban @Craig?")]
+        public async Task Poll([Remainder] [Summary("The question you'd like to propose in the poll.")] string question)
+        {
+            var pollEmbed = BasePollEmbed()
+                .WithTitle(question);
+
+            var pollMessage = await ReplyAsync("", false, pollEmbed.Build());
+
+            await pollMessage.AddReactionsAsync(_emojiThumbs);
+        }
 
         [Command("vote")]
         [Summary("Casts a vote during a poll.")]
@@ -152,10 +165,17 @@ namespace CraigBot.Bot.Modules
                 .WithColor(Color.Gold)
                 .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl());
         
-        private readonly Emoji _tickEmoji = new Emoji("\u2705");
+        private readonly IEmote _tickEmoji = new Emoji("\u2705");
         
-        private readonly Emoji _invalidEmoji = new Emoji("\uD83D\uDEAB");
+        private readonly IEmote _invalidEmoji = new Emoji("\uD83D\uDEAB");
 
+        private readonly IEmote[] _emojiThumbs =
+        {
+            new Emoji("\uD83D\uDC4D"),                    // Thumbs up
+            new Emoji("\uD83D\uDC4E"),                    // Thumbs down
+            new Emoji("\uD83E\uDD37\u200D\u2642\uFE0F"),  // Shrug
+        };
+        
         #endregion
     }
 }
