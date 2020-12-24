@@ -96,6 +96,34 @@ namespace CraigBot.Bot.Modules
             await ReplyAsync($"Grant successful! {(user ?? Context.User).Mention} has been granted `{_options.Currency}{amount:0.00}`!");
         }
         
+        [Command("fine")]
+        [Summary("Fines a user.")]
+        [Example("fine 1.10 @Craig")]
+        [Example("fine .01 @Craig")]
+        [Example("fine 1000.00 @Craig")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task Fine([Summary("The size of the fine.")] decimal amount, 
+            [Summary("The user you wish to fine.")] SocketGuildUser user)
+        {
+            if (BankingHelpers.BelowMinimum(amount))
+            {
+                await ReplyAsync($"The minimum amount you can fine is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
+                return;
+            }
+            
+            var account = await _bankingService.GetAccountOrCreateAccount(user);
+            
+            if (!account.CanAfford(amount))
+            {
+                await ReplyAsync("That user can't afford to pay a fine of that size!");
+                return;
+            }
+
+            await _bankingService.Withdraw(account, amount);
+            
+            await ReplyAsync($"Fine successful! {user.Mention} has been fined `{_options.Currency}{amount:0.00}`!");
+        }
+        
         #endregion
         
         #region Helpers
