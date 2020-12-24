@@ -28,5 +28,23 @@ namespace CraigBot.Bot.Services
 
             return dog.ImageUrl;
         }
+
+        public async Task<string> GetRandomCat()
+        {
+            var response = await _httpClient.GetStringAsync(_options.CatApiUrl);
+
+            var cat = JsonConvert.DeserializeObject<CatResponse>(response);
+
+            return cat.ImageUrl;
+        }
+
+        public async Task<string> GetRandomFox()
+        {
+            var response = await _httpClient.GetStringAsync(_options.FoxApiUrl);
+
+            var fox = JsonConvert.DeserializeObject<FoxResponse>(response);
+
+            return fox.ImageUrl;
+        }
     }
 }
