@@ -11,7 +11,7 @@ namespace CraigBot.Bot.Tests.Modules
         public void AudioModule_HasCorrectAttributes()
         {
             Assert.NotNull(typeof(HelpModule).GetCustomAttribute<SummaryAttribute>(false));
-            Assert.NotNull(typeof(HelpModule).GetCustomAttribute<RequireContextAttribute>(false));
+            Assert.NotNull(typeof(HelpModule).GetCustomAttribute<RequireContextAttribute>(true));
         }
     }
 }

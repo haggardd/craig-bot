@@ -11,7 +11,7 @@ namespace CraigBot.Bot.Tests.Modules
         public void BankingModule_HasCorrectAttributes()
         {
             Assert.NotNull(typeof(BankingModule).GetCustomAttribute<SummaryAttribute>(false));
-            Assert.NotNull(typeof(BankingModule).GetCustomAttribute<RequireContextAttribute>(false));
+            Assert.NotNull(typeof(BankingModule).GetCustomAttribute<RequireContextAttribute>(true));
         }
     }
 }

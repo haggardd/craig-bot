@@ -11,7 +11,7 @@ namespace CraigBot.Bot.Tests.Modules
         public void FunModule_HasCorrectAttributes()
         {
             Assert.NotNull(typeof(FunModule).GetCustomAttribute<SummaryAttribute>(false));
-            Assert.NotNull(typeof(FunModule).GetCustomAttribute<RequireContextAttribute>(false));
+            Assert.NotNull(typeof(FunModule).GetCustomAttribute<RequireContextAttribute>(true));
         }
     }
 }

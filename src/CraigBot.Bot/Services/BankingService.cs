@@ -26,7 +26,14 @@ namespace CraigBot.Bot.Services
             _discord.MessageReceived += OnMessageReceived;
         }
 
-        public async Task<BankAccount> GetAccountOrCreateAccount(IUser user)
+        public async Task<BankAccount> GetAccount(ulong id)
+        {
+            var account = await _bankAccountRepository.GetByUserId(id);
+
+            return account;
+        }
+
+        public async Task<BankAccount> GetOrCreateAccount(IUser user)
         {
             var account = await _bankAccountRepository.GetByUserId(user.Id) ?? await CreateAccount(user);
 
@@ -87,7 +94,7 @@ namespace CraigBot.Bot.Services
                 return;
             }
 
-            var account = await GetAccountOrCreateAccount(userMessage.Author);
+            var account = await GetOrCreateAccount(userMessage.Author);
 
             await Deposit(account, _options.MessageReward);
         }

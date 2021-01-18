@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CraigBot.Bot.Common;
 using CraigBot.Bot.Configuration;
 using CraigBot.Bot.Modules;
 using CraigBot.Bot.TypeReaders;
@@ -46,7 +47,8 @@ namespace CraigBot.Bot.Services
             await _discord.StartAsync();
             await _discord.SetActivityAsync(new Game($"{_botOptions.Prefix}help", ActivityType.Listening));
             
-            _commandService.AddTypeReader(typeof(decimal), new CurrencyTypeReader());
+            _commandService.AddTypeReader(typeof(decimal), new CurrencyTypeReader(), true);
+            _commandService.AddTypeReader(typeof(Fraction), new FractionTypeReader());
             
             await _commandService.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
 
@@ -80,11 +82,6 @@ namespace CraigBot.Bot.Services
                 await _commandService.RemoveModuleAsync<FunModule>();
             }
 
-            if (!_moduleFlags.Game)
-            {
-                await _commandService.RemoveModuleAsync<GameModule>();
-            }
-            
             if (!_moduleFlags.Help)
             {
                 await _commandService.RemoveModuleAsync<HelpModule>();
@@ -110,11 +107,6 @@ namespace CraigBot.Bot.Services
                 await _commandService.RemoveModuleAsync<PollModule>();
             }
 
-            if (!_moduleFlags.Shop)
-            {
-                await _commandService.RemoveModuleAsync<ShopModule>();
-            }
-            
             if (!_moduleFlags.Utility)
             {
                 await _commandService.RemoveModuleAsync<UtilityModule>();

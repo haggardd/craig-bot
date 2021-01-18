@@ -4,12 +4,27 @@ using Discord.Commands;
 
 namespace CraigBot.Bot.Modules
 {
+    [RequireContext(ContextType.Guild)]
     public abstract class CraigBotBaseModule : ModuleBase<SocketCommandContext>
     {
-        protected async Task ReplyAndAddReactionAsync(string messageText, IUserMessage userMessage, IEmote emote)
+        // TODO: These have been changed and will need testing
+        protected async Task AddReactionAndReply(string messageText, IUserMessage userMessage, IEmote emote, 
+            EmbedBuilder embed = null)
         {
             await userMessage.AddReactionAsync(emote);
-            await ReplyAsync(messageText);
+
+            await (embed == null
+                ? ReplyAsync(messageText)
+                : ReplyAsync(messageText, false, embed.Build()));
+        }
+
+        protected async Task ReplyAndAddReactions(string messageText, IEmote[] emotes, EmbedBuilder embed = null)
+        {
+            var message = embed == null
+                ? await ReplyAsync(messageText)
+                : await ReplyAsync(messageText, false, embed.Build());
+
+            await message.AddReactionsAsync(emotes);
         }
     }
 }

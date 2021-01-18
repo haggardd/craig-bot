@@ -6,18 +6,17 @@ using Discord.WebSocket;
 
 namespace CraigBot.Bot.Modules
 {
-    // TODO: Need to make sure these commands can't be executed with @Craig
     [Summary("Moderation Commands")]
-    [RequireContext(ContextType.Guild)]
     public class ModerationModule : CraigBotBaseModule
     {
         #region Commands
         
         [Command("kick")]
         [Summary("Kicks the given user from the server.")]
-        [RequireUserPermission(GuildPermission.KickMembers)]
         [Example("kick @Craig")]
         [Example("kick @Craig spamming")]
+        [RequireUserPermission(GuildPermission.KickMembers)]
+        [PreventCraigMention]
         public async Task Kick([Summary("The user you wish to kick.")] SocketGuildUser user,
             [Remainder][Summary("The reason for the kick.")] string reason = null)
             => await user.KickAsync(reason);
@@ -27,6 +26,7 @@ namespace CraigBot.Bot.Modules
         [Example("ban @Craig")]
         [Example("ban @Craig repeat spamming")]
         [RequireUserPermission(GuildPermission.BanMembers)]
+        [PreventCraigMention]
         public async Task Ban([Summary("The user you wish to ban.")] SocketGuildUser user,
             [Remainder][Summary("The reason for the ban.")] string reason = null) 
             => await user.BanAsync(7, reason);
@@ -35,8 +35,9 @@ namespace CraigBot.Bot.Modules
         [Summary("Warns the given user from the server.")]
         [Example("warn @Craig No caps please!")]
         [RequireUserPermission(GuildPermission.KickMembers)]
+        [PreventCraigMention]
         public async Task Warn([Summary("The user you wish to warn.")] SocketGuildUser user, 
-            [Remainder] [Summary("The reason for the warning.")] string reason)
+            [Remainder][Summary("The reason for the warning.")] string reason)
             => await ReplyAsync($"{user.Mention}, this is a warning! Reason: *{reason}*");
 
         [Command("mute")]

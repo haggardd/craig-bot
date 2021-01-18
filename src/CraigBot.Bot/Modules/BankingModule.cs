@@ -11,7 +11,6 @@ using Microsoft.Extensions.Options;
 namespace CraigBot.Bot.Modules
 {
     [Summary("Banking Commands")]
-    [RequireContext(ContextType.Guild)]
     public class BankingModule : CraigBotBaseModule
     {
         private readonly IBankingService _bankingService;
@@ -29,7 +28,7 @@ namespace CraigBot.Bot.Modules
         [Summary("Provides the user with a bank statement.")]
         public async Task Bank()
         {
-            var account = await _bankingService.GetAccountOrCreateAccount(Context.User);
+            var account = await _bankingService.GetOrCreateAccount(Context.User);
 
             var embed = BaseBankingEmbed()
                 .WithTitle("Bank Statement")
@@ -46,6 +45,7 @@ namespace CraigBot.Bot.Modules
         public async Task Wire([Summary("The amount of funds you wish to send.")] decimal amount, 
             [Summary("The user you wish to send funds to.")] SocketGuildUser user)
         {
+            // TODO: Might be able to create an attribute to prevent self mention
             if (Context.User.Id == user.Id)
             {
                 await ReplyAsync("You can't send funds to yourself!");
@@ -58,8 +58,8 @@ namespace CraigBot.Bot.Modules
                 return;
             }
             
-            var payerAccount = await _bankingService.GetAccountOrCreateAccount(Context.User);
-            var payeeAccount = await _bankingService.GetAccountOrCreateAccount(user);
+            var payerAccount = await _bankingService.GetOrCreateAccount(Context.User);
+            var payeeAccount = await _bankingService.GetOrCreateAccount(user);
 
             if (!payerAccount.CanAfford(amount))
             {
@@ -89,7 +89,7 @@ namespace CraigBot.Bot.Modules
                 return;
             }
             
-            var account = await _bankingService.GetAccountOrCreateAccount(user ?? Context.User);
+            var account = await _bankingService.GetOrCreateAccount(user ?? Context.User);
 
             await _bankingService.Deposit(account, amount);
             
@@ -111,7 +111,7 @@ namespace CraigBot.Bot.Modules
                 return;
             }
             
-            var account = await _bankingService.GetAccountOrCreateAccount(user);
+            var account = await _bankingService.GetOrCreateAccount(user);
             
             if (!account.CanAfford(amount))
             {
