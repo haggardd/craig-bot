@@ -9,7 +9,6 @@ using Discord.Commands;
 namespace CraigBot.Bot.Modules
 {
     [Summary("Poll Commands")]
-    [RequireContext(ContextType.Guild)]
     public class PollModule : CraigBotBaseModule
     {
         private readonly IPollService _pollService;
@@ -47,13 +46,13 @@ namespace CraigBot.Bot.Modules
                 choicesText += $"`{i + 1})` {choices[i]} \n";
             }
             
-            var pollEmbed = BasePollEmbed()
+            var embed = BasePollEmbed()
                 .WithTitle(question)
                 .WithDescription("Use `!vote` with choice number to cast your vote!")
                 .WithFooter(f => f.Text = $"Poll ends {duration} seconds from message sent")
                 .AddField("Choices: ", choicesText);
 
-            await ReplyAsync("", false, pollEmbed.Build());
+            await ReplyAsync("", false, embed.Build());
             
             _pollService.Create(question, choices);
             
@@ -65,14 +64,12 @@ namespace CraigBot.Bot.Modules
         [Command("poll")]
         [Summary("Creates a simple yes/no poll.")]
         [Example("poll Should we ban @Craig?")]
-        public async Task Poll([Remainder] [Summary("The question you'd like to propose in the poll.")] string question)
+        public async Task Poll([Remainder][Summary("The question you'd like to propose in the poll.")] string question)
         {
-            var pollEmbed = BasePollEmbed()
+            var embed = BasePollEmbed()
                 .WithTitle(question);
 
-            var pollMessage = await ReplyAsync("", false, pollEmbed.Build());
-
-            await pollMessage.AddReactionsAsync(_emojiThumbs);
+            await ReplyAndAddReactions("", _emojiThumbs, embed);
         }
 
         [Command("vote")]
@@ -82,24 +79,24 @@ namespace CraigBot.Bot.Modules
         {
             var userId = Context.User.Id;
             
-            // TODO: Need to have a think about how error handling is current handled in modules, might be better to move some to the services
+            // TODO: Need to have a think about how error handling is currently handled in modules, might be better to move some to the services
             if (!_pollService.Current.IsPollActive())
             {
-                await ReplyAndAddReactionAsync("There are no active polls.", 
+                await AddReactionAndReply("There are no active polls.", 
                     Context.Message, _invalidEmoji);
                 return;
             }
 
             if (_pollService.Current.HasUserVoted(userId))
             {
-                await ReplyAndAddReactionAsync("You've already voted in the current poll.", 
+                await AddReactionAndReply("You've already voted in the current poll.", 
                     Context.Message, _invalidEmoji);
                 return;
             }
 
             if (!_pollService.Current.IsValidVote(choice))
             {
-                await ReplyAndAddReactionAsync("Invalid choice. Please vote for one of the choices in the poll message.", 
+                await AddReactionAndReply("Invalid choice. Please vote for one of the choices in the poll message.", 
                     Context.Message, _invalidEmoji);
                 return;
             }
@@ -150,12 +147,12 @@ namespace CraigBot.Bot.Modules
                 resultsText = "No votes were cast!";
             }
 
-            var pollOverEmbed = BasePollEmbed()
+            var embed = BasePollEmbed()
                 .WithTitle("Poll over!")
                 .WithDescription(_pollService.Current.Question)
                 .AddField("Vote Results", resultsText);
 
-            await ReplyAsync("", false, pollOverEmbed.Build());
+            await ReplyAsync("", false, embed.Build());
             
             _pollService.EndCurrent();
         }

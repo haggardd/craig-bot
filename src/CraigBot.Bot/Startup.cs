@@ -60,17 +60,18 @@ namespace CraigBot.Bot
 
             services.AddHttpClient<IImageService, ImageService>();
             
-            // TODO: If the custom command service and client don't get used, might as well go back to using the old ones
             services.AddSingleton<DiscordSocketClient, CraigBotClient>()
                 .AddSingleton<CommandService, CraigBotCommandService>()
                 .AddTransient<IFortuneCookieRepository, FortuneCookieRepository>()
                 .AddTransient<IEightBallResponseRepository, EightBallResponseRepository>()
                 .AddTransient<IBankAccountRepository, BankAccountRepository>()
+                .AddTransient<IBetRepository, BetRepository>()
                 .AddSingleton<ICommandHandler, CommandHandler>()
                 .AddSingleton<IStartupService, StartupService>()
                 .AddSingleton<IAudioService, AudioService>()
-                .AddTransient<IBankingService, BankingService>()
                 .AddSingleton<IPollService, PollService>()
+                .AddTransient<IBankingService, BankingService>()
+                .AddTransient<IBetService, BetService>()
                 .AddSingleton<ILoggingService, LoggingService>()
                 .AddSingleton<Random>()
                 .AddSingleton(Configuration);

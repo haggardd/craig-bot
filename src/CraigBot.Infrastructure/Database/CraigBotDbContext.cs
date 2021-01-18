@@ -10,6 +10,8 @@ namespace CraigBot.Infrastructure.Database
         public DbSet<FortuneCookie> FortuneCookies { get; set; }
         public DbSet<EightBallResponse> EightBallResponses { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<Bet> Bets { get; set; }
+        public DbSet<Wager> Wagers { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -51,7 +53,34 @@ namespace CraigBot.Infrastructure.Database
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.UserId).IsRequired();
                 entity.Property(e => e.Username).IsRequired();
+                // TODO: Might be able to use a default value setting for this, worth looking into
                 entity.Property(e => e.Balance).IsRequired();
+            });
+            
+            // Bet
+            modelBuilder.Entity<Bet>().ToTable("Bet");
+            modelBuilder.Entity<Bet>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.UserId).IsRequired();
+                entity.Property(e => e.Username).IsRequired();
+                entity.Property(e => e.Description).IsRequired();
+                entity.Property(e => e.ForOdds).IsRequired();
+                entity.Property(e => e.AgainstOdds).IsRequired();
+                // TODO: This might need a default value setting
+                entity.Property(e => e.HasEnded).IsRequired();
+            });
+            
+            // Wager
+            modelBuilder.Entity<Wager>().ToTable("Wager");
+            modelBuilder.Entity<Wager>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.UserId).IsRequired();
+                entity.Property(e => e.BetId).IsRequired();
+                entity.Property(e => e.Username).IsRequired();
+                entity.Property(e => e.Stake).IsRequired();
+                entity.Property(e => e.InFavour).IsRequired();
             });
 
             base.OnModelCreating(modelBuilder);
