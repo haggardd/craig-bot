@@ -21,9 +21,13 @@ namespace CraigBot.Bot.Services
         
         public async Task<string> GetRandomDog()
         {
-            // TODO: Need to have a think about error handle for API calls
-            var response = await _httpClient.GetStringAsync(_options.DogApiUrl); 
+            var response = await _httpClient.GetStringAsync(_options.DogApiUrl);
 
+            if (response == null)
+            {
+                return null;
+            }
+            
             var dog = JsonConvert.DeserializeObject<DogResponse>(response);
 
             return dog.ImageUrl;
@@ -32,6 +36,11 @@ namespace CraigBot.Bot.Services
         public async Task<string> GetRandomCat()
         {
             var response = await _httpClient.GetStringAsync(_options.CatApiUrl);
+            
+            if (response == null)
+            {
+                return null;
+            }
 
             var cat = JsonConvert.DeserializeObject<CatResponse>(response);
 
@@ -41,6 +50,11 @@ namespace CraigBot.Bot.Services
         public async Task<string> GetRandomFox()
         {
             var response = await _httpClient.GetStringAsync(_options.FoxApiUrl);
+            
+            if (response == null)
+            {
+                return null;
+            }
 
             var fox = JsonConvert.DeserializeObject<FoxResponse>(response);
 

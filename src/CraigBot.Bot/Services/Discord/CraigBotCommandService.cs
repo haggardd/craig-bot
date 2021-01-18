@@ -9,7 +9,6 @@ namespace CraigBot.Bot.Services.Discord
         private static readonly CommandServiceConfig Configuration = new CommandServiceConfig
         {
             LogLevel = LogSeverity.Verbose,
-            // TODO: Check if this is needed and visa versa
             DefaultRunMode = RunMode.Async
         };
         

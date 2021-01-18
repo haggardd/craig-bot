@@ -5,7 +5,6 @@ using Discord.Commands;
 namespace CraigBot.Bot.Modules
 {
     [Summary("Image Commands")]
-    [RequireContext(ContextType.Guild)]
     public class ImageModule : CraigBotBaseModule
     {
         private readonly IImageService _imageService;
@@ -23,6 +22,11 @@ namespace CraigBot.Bot.Modules
         {
             var imageUrl = await _imageService.GetRandomDog();
             
+            if (imageUrl == null)
+            {
+                await ReplyAsync("The API failed to return a dog.");
+            }
+            
             await ReplyAsync(imageUrl);
         }
 
@@ -31,6 +35,11 @@ namespace CraigBot.Bot.Modules
         public async Task Cat()
         {
             var imageUrl = await _imageService.GetRandomCat();
+
+            if (imageUrl == null)
+            {
+                await ReplyAsync("The API failed to return a cat.");
+            }
             
             await ReplyAsync(imageUrl);
         }
@@ -40,6 +49,11 @@ namespace CraigBot.Bot.Modules
         public async Task Fox()
         {
             var imageUrl = await _imageService.GetRandomFox();
+            
+            if (imageUrl == null)
+            {
+                await ReplyAsync("The API failed to return a fox.");
+            }
             
             await ReplyAsync(imageUrl);
         }

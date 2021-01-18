@@ -12,7 +12,6 @@ namespace CraigBot.Bot.Modules
      * - Get basic YouTube playback working first
      * - Might want to limit the size of the queue */
     [Summary("Audio Commands")]
-    [RequireContext(ContextType.Guild)]
     public class AudioModule : CraigBotBaseModule
     {
         private readonly IAudioService _audioService;

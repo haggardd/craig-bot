@@ -6,8 +6,10 @@ namespace CraigBot.Core.Services
 {
     public interface IBankingService
     {
-        Task<BankAccount> GetAccountOrCreateAccount(IUser user);
+        Task<BankAccount> GetAccount(ulong id);
         
+        Task<BankAccount> GetOrCreateAccount(IUser user);
+           
         Task<BankAccount> CreateAccount(IUser user);
 
         Task<BankAccount> Deposit(BankAccount account, decimal amount);

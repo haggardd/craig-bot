@@ -9,7 +9,6 @@ using Discord.WebSocket;
 namespace CraigBot.Bot.Modules
 {
     [Summary("Utility Commands")]
-    [RequireContext(ContextType.Guild)]
     public class UtilityModule : CraigBotBaseModule
     {
         #region Commands

@@ -10,7 +10,6 @@ namespace CraigBot.Bot.Modules
 {
     // TODO: Need to relay permissions for commands to the user
     [Summary("Help Commands")]
-    [RequireContext(ContextType.Guild)]
     public class HelpModule : CraigBotBaseModule
     {
         private readonly CommandService _commandService;
@@ -55,7 +54,7 @@ namespace CraigBot.Bot.Modules
         [Command("help")]
         [Summary("Gives information on specific commands.")]
         [Example("help poll")]
-        public async Task Help([Remainder] [Summary("The command name you wish to get more information about.")] 
+        public async Task Help([Remainder][Summary("The command name you wish to get more information about.")] 
             string command)
         {
             var result = _commandService.Search(Context, command);

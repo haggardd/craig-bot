@@ -11,7 +11,7 @@ namespace CraigBot.Bot.Tests.Modules
         public void PollModule_HasCorrectAttributes()
         {
             Assert.NotNull(typeof(PollModule).GetCustomAttribute<SummaryAttribute>(false));
-            Assert.NotNull(typeof(PollModule).GetCustomAttribute<RequireContextAttribute>(false));
+            Assert.NotNull(typeof(PollModule).GetCustomAttribute<RequireContextAttribute>(true));
         }
     }
 }
