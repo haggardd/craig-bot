@@ -27,7 +27,7 @@ namespace CraigBot.Bot.Modules
             [Summary("The amount of seconds to pass before the winner is decided.")] int duration, 
             [Summary("The choices to pick from during the poll.")] params string[] choices)
         {
-            if (_pollService.Current.IsPollActive())
+            if (_pollService.Current.IsActive())
             {
                 await ReplyAsync("There is already an active poll, either end the current poll or wait for it to end.");
                 return;
@@ -80,7 +80,7 @@ namespace CraigBot.Bot.Modules
             var userId = Context.User.Id;
             
             // TODO: Need to have a think about how error handling is currently handled in modules, might be better to move some to the services
-            if (!_pollService.Current.IsPollActive())
+            if (!_pollService.Current.IsActive())
             {
                 await AddReactionAndReply("There are no active polls.", 
                     Context.Message, _invalidEmoji);
@@ -110,7 +110,7 @@ namespace CraigBot.Bot.Modules
         [Summary("Ends the current poll.")]
         public async Task End()
         {
-            if (!_pollService.Current.IsPollActive())
+            if (!_pollService.Current.IsActive())
             {
                 await ReplyAsync("There are no active polls.");
                 return;
@@ -125,7 +125,7 @@ namespace CraigBot.Bot.Modules
 
         private async Task EndPoll()
         {
-            if (!_pollService.Current.IsPollActive())
+            if (!_pollService.Current.IsActive())
             {
                 return;
             }

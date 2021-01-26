@@ -42,17 +42,11 @@ namespace CraigBot.Bot.Modules
         [Example("wire 10 @Craig")]
         [Example("wire 1.10 @Craig")]
         [Example("wire .01 @Craig")]
+        [PreventSelfMention]
         public async Task Wire([Summary("The amount of funds you wish to send.")] decimal amount, 
             [Summary("The user you wish to send funds to.")] SocketGuildUser user)
         {
-            // TODO: Might be able to create an attribute to prevent self mention
-            if (Context.User.Id == user.Id)
-            {
-                await ReplyAsync("You can't send funds to yourself!");
-                return;
-            }
-            
-            if (BankingHelpers.BelowMinimum(amount))
+            if (BankingHelpers.IsBelowMinimum(amount))
             {
                 await ReplyAsync($"The minimum amount you can send is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
                 return;
@@ -83,7 +77,7 @@ namespace CraigBot.Bot.Modules
         public async Task Grant([Summary("The amount of funds you wish to grant.")] decimal amount, 
             [Summary("The user you wish to receive the grant.")] SocketGuildUser user = null)
         {
-            if (BankingHelpers.BelowMinimum(amount))
+            if (BankingHelpers.IsBelowMinimum(amount))
             {
                 await ReplyAsync($"The minimum amount you can grant is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
                 return;
@@ -105,7 +99,7 @@ namespace CraigBot.Bot.Modules
         public async Task Fine([Summary("The size of the fine.")] decimal amount, 
             [Summary("The user you wish to fine.")] SocketGuildUser user)
         {
-            if (BankingHelpers.BelowMinimum(amount))
+            if (BankingHelpers.IsBelowMinimum(amount))
             {
                 await ReplyAsync($"The minimum amount you can fine is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
                 return;

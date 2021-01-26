@@ -11,7 +11,6 @@ using Microsoft.Extensions.Options;
 
 namespace CraigBot.Bot.Modules
 {
-    // TODO: Finish implementing this
     [Summary("Betting Commands")]
     public class BettingModule : CraigBotBaseModule
     {
@@ -46,9 +45,7 @@ namespace CraigBot.Bot.Modules
 
             foreach (var bet in bets)
             {
-                // TODO: Might be a good idea to create some custom `ToString()` methods for stuff like this (and not just bets)
-                // TODO: Need to make sure text like this is consistent across the codebase
-                var betTitle = $"Bet `ID: {bet.Id}` |  Odds `{bet.ForOdds} | {bet.AgainstOdds}` | Creator `{bet.Username}`";
+                var betTitle = bet.ToFormattedString();
                 embed.AddField(betTitle, bet.Description);
             }
             
@@ -69,7 +66,7 @@ namespace CraigBot.Bot.Modules
                 .WithTitle($"Bet `ID: {bet.Id}`")
                 .WithDescription($"Use `{_options.Prefix}wager` to participate.")
                 .AddField("Description", bet.Description)
-                .AddField("Odds", $"`{bet.ForOdds} | {bet.AgainstOdds}`");
+                .AddField("Odds", $"`{bet.ForOdds} <> {bet.AgainstOdds}`");
 
             await ReplyAsync("", false, embed.Build());
         }
@@ -88,13 +85,13 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await ReplyAsync($"There are active bets with ID: `{betId}`.");
+                await ReplyAsync($"There are no active bets with ID: `{betId}`.");
                 return;
             }
             
             var account =  await _bankingService.GetOrCreateAccount(Context.User);
             
-            if (BankingHelpers.BelowMinimum(stake))
+            if (BankingHelpers.IsBelowMinimum(stake))
             {
                 await ReplyAsync($"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
                 return;
@@ -108,7 +105,7 @@ namespace CraigBot.Bot.Modules
             }
         
             await _bankingService.Withdraw(account, stake);
-            // TODO: Need to decide if multiple wagers for the same bet should be allowed
+            
             await _betService.CreateWager(Context.User, betId, stake, inFavour);
             
             await ReplyAsync($"Wager placed! {Context.User.Mention} wagered `{_options.Currency}{stake:0.00}` on bet ID: `{bet.Id}`.");
@@ -125,39 +122,34 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await ReplyAsync($"There are active bets with ID: `{betId}`.");
+                await ReplyAsync($"There are no active bets with ID: `{betId}`.");
                 return;
             }
-
+            
             if (bet.UserId != Context.User.Id)
             {
-                await ReplyAsync($"You aren't the creator of this bet.");
+                await ReplyAsync($"You can't end bets you didn't create.");
                 return;
             }
 
             var betResult = await _betService.EndBet(bet, result);
-
-            // TODO: Not sure about the wordage here
+            
             var resultMessage = result
                 ? "The bet came through!"
                 : "The bet went against the odds!";
 
             var embed = BaseBettingEmbed()
                 .WithTitle($"Bet Result `ID: {bet.Id}`")
-                .WithDescription($"Creator `{bet.Username}`\n{bet.Description}")
-                .AddField("Odds", $"{bet.ForOdds} | {bet.AgainstOdds}", true)
+                .WithDescription($"{bet.Description}")
+                .AddField("Odds", $"`{bet.ForOdds} <> {bet.AgainstOdds}`", true)
                 .AddField("Result", resultMessage, true);
 
-            var wagerResults = "";
+            var wagerResults = "No wagers were made.";
             
-            // TODO: Should check if anyone actually made wagers first
-            foreach(var wagerResult in betResult.WagerResults)
+            if (betResult.WagerResults.Any())
             {
-                var inFavourTest = wagerResult.InFavour
-                    ? "`In Favour`"
-                    : "`Against`";
-
-                wagerResults += $"• `{wagerResult.Username}` | Winnings: `{wagerResult.Winnings}` | `{inFavourTest}`\n";
+                wagerResults = betResult.WagerResults.Aggregate("", (current, wagerResult) 
+                    => current + $"• {wagerResult.ToFormattedString()}\n");
             }
 
             embed.AddField("Wager Results", wagerResults);

@@ -34,6 +34,11 @@ namespace CraigBot.Bot.Services
         {
             var bet = await _betRepository.GetBetById(id);
 
+            if (bet == null)
+            {
+                return null;
+            }
+            
             return bet.HasEnded 
                 ? null 
                 : bet;
@@ -74,39 +79,42 @@ namespace CraigBot.Bot.Services
 
         public async Task<BetResult> EndBet(Bet bet, bool result)
         {
-            var wagers = await _betRepository.GetWagersByBetId(bet.Id);
+            var wagers = (await _betRepository.GetWagersByBetId(bet.Id)).ToList();
 
             var wagerResults = new List<WagerResult>();
 
             Fraction.TryParse(bet.ForOdds, out var forOdds);
             Fraction.TryParse(bet.AgainstOdds, out var againstOdds);
-            
-            foreach (var wager in wagers)
+
+            if (wagers.Any())
             {
-                if (result != wager.InFavour)
+                foreach (var wager in wagers)
                 {
-                    continue;
-                }
+                    if (result != wager.InFavour)
+                    {
+                        continue;
+                    }
 
-                // TODO: Might want to move this somewhere else if possible
-                var winnings = wager.InFavour
-                    ? wager.Stake.CalculateWinnings(forOdds)
-                    : wager.Stake.CalculateWinnings(againstOdds);
+                    // TODO: Might want to move this somewhere else if possible
+                    var winnings = wager.InFavour
+                        ? wager.Stake.CalculateWinnings(forOdds)
+                        : wager.Stake.CalculateWinnings(againstOdds);
                     
-                var bankAccount = await _bankingService.GetAccount(wager.UserId);
+                    var bankAccount = await _bankingService.GetAccount(wager.UserId);
 
-                var wagerResult = new WagerResult
-                {
-                    Username = wager.Username,
-                    Winnings = winnings,
-                    InFavour = wager.InFavour
-                };
+                    var wagerResult = new WagerResult
+                    {
+                        Username = wager.Username,
+                        Winnings = winnings,
+                        InFavour = wager.InFavour
+                    };
                 
-                wagerResults.Add(wagerResult);
+                    wagerResults.Add(wagerResult);
                 
-                await _bankingService.Deposit(bankAccount, winnings);
+                    await _bankingService.Deposit(bankAccount, winnings);
+                }
             }
-            
+
             var betResult = new BetResult
             {
                 Username = bet.Username,

@@ -16,7 +16,7 @@ namespace CraigBot.Infrastructure.Database
             if (!context.FortuneCookies.Any())
             {
                 var parsedFortunes = await DeserializeJsonCollection<string>("fortunes");
-                var fortunes = parsedFortunes.Select(x => new FortuneCookie {Fortune = x});
+                var fortunes = parsedFortunes.Select(x => new Fortune {Text = x});
                     
                 await context.FortuneCookies.AddRangeAsync(fortunes);
             }
@@ -24,7 +24,7 @@ namespace CraigBot.Infrastructure.Database
             if (!context.EightBallResponses.Any())
             {
                 var parsedResponses = await DeserializeJsonCollection<string>("eightBallResponses");
-                var responses = parsedResponses.Select(x => new EightBallResponse {Response = x});
+                var responses = parsedResponses.Select(x => new EightBallResponse {Text = x});
                     
                 await context.EightBallResponses.AddRangeAsync(responses);
             }

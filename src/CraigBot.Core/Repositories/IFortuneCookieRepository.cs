@@ -6,6 +6,6 @@ namespace CraigBot.Core.Repositories
 {
     public interface IFortuneCookieRepository
     {
-        Task<IEnumerable<FortuneCookie>> GetAll();
+        Task<IEnumerable<Fortune>> GetAll();
     }
 }

@@ -7,16 +7,16 @@ using Discord.Commands;
 namespace CraigBot.Bot.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class PreventCraigMentionAttribute : PreconditionAttribute
+    public class PreventSelfMentionAttribute : PreconditionAttribute
     {
         public override async Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context,
             CommandInfo command, IServiceProvider services)
         {
-            var craigId = context.Client.CurrentUser.Id;
+            var userId = context.User.Id;
             var mentionedUserIds = context.Message.MentionedUserIds;
 
-            return mentionedUserIds.Contains(craigId)
-                ? PreconditionResult.FromError("Command can't contain Craig mention")
+            return mentionedUserIds.Contains(userId)
+                ? PreconditionResult.FromError("Command can't contain a self mention")
                 : PreconditionResult.FromSuccess();
         }
     }

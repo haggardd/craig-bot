@@ -7,7 +7,6 @@ namespace CraigBot.Bot.Modules
     [RequireContext(ContextType.Guild)]
     public abstract class CraigBotBaseModule : ModuleBase<SocketCommandContext>
     {
-        // TODO: These have been changed and will need testing
         protected async Task AddReactionAndReply(string messageText, IUserMessage userMessage, IEmote emote, 
             EmbedBuilder embed = null)
         {
