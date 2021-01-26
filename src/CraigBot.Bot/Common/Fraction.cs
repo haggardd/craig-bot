@@ -28,7 +28,7 @@
                 return false;
             }
 
-            if (!int.TryParse(numbers[0], out var numerator) || !int.TryParse(numbers[0], out var denominator))
+            if (!int.TryParse(numbers[0], out var numerator) || !int.TryParse(numbers[1], out var denominator))
             {
                 return false;
             }

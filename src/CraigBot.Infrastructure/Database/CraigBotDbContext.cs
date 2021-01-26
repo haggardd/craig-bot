@@ -7,7 +7,7 @@ namespace CraigBot.Infrastructure.Database
 {
     public class CraigBotDbContext : DbContext
     {
-        public DbSet<FortuneCookie> FortuneCookies { get; set; }
+        public DbSet<Fortune> FortuneCookies { get; set; }
         public DbSet<EightBallResponse> EightBallResponses { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<Bet> Bets { get; set; }
@@ -31,11 +31,11 @@ namespace CraigBot.Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Fortune Cookie
-            modelBuilder.Entity<FortuneCookie>().ToTable("FortuneCookie");
-            modelBuilder.Entity<FortuneCookie>(entity =>
+            modelBuilder.Entity<Fortune>().ToTable("FortuneCookie");
+            modelBuilder.Entity<Fortune>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Fortune).IsRequired();
+                entity.Property(e => e.Text).IsRequired();
             });
             
             // Eight-Ball Response
@@ -43,7 +43,7 @@ namespace CraigBot.Infrastructure.Database
             modelBuilder.Entity<EightBallResponse>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Response).IsRequired();
+                entity.Property(e => e.Text).IsRequired();
             });
             
             // Bank Account
@@ -53,7 +53,6 @@ namespace CraigBot.Infrastructure.Database
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.UserId).IsRequired();
                 entity.Property(e => e.Username).IsRequired();
-                // TODO: Might be able to use a default value setting for this, worth looking into
                 entity.Property(e => e.Balance).IsRequired();
             });
             
@@ -67,8 +66,7 @@ namespace CraigBot.Infrastructure.Database
                 entity.Property(e => e.Description).IsRequired();
                 entity.Property(e => e.ForOdds).IsRequired();
                 entity.Property(e => e.AgainstOdds).IsRequired();
-                // TODO: This might need a default value setting
-                entity.Property(e => e.HasEnded).IsRequired();
+                entity.Property(e => e.HasEnded).IsRequired().HasDefaultValue(false);
             });
             
             // Wager

@@ -47,7 +47,7 @@ namespace CraigBot.Bot.Services
             await _discord.StartAsync();
             await _discord.SetActivityAsync(new Game($"{_botOptions.Prefix}help", ActivityType.Listening));
             
-            _commandService.AddTypeReader(typeof(decimal), new CurrencyTypeReader(), true);
+            _commandService.AddTypeReader(typeof(decimal), new TwoDecimalPlaceTypeReader(), true);
             _commandService.AddTypeReader(typeof(Fraction), new FractionTypeReader());
             
             await _commandService.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
