@@ -1,6 +1,6 @@
 ﻿namespace CraigBot.Core.Models
 {
-    public class EightBallResponse : StoredText
+    public class Fortune : StoredText
     {
     }
 }

@@ -16,7 +16,7 @@ namespace CraigBot.Infrastructure.Repositories
             _context = context;
         }
         
-        public async Task<IEnumerable<FortuneCookie>> GetAll()
+        public async Task<IEnumerable<Fortune>> GetAll()
         {
             var cookies = await _context.FortuneCookies.ToListAsync();
 

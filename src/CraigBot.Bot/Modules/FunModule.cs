@@ -31,7 +31,7 @@ namespace CraigBot.Bot.Modules
             var fortunes = (await _fortuneCookieRepository.GetAll()).ToList();
             var randomIndex = _random.Next(fortunes.Count());
 
-            await ReplyAsync(fortunes[randomIndex].Fortune);
+            await ReplyAsync(fortunes[randomIndex].Text);
         }
 
         [Command("8ball")]
@@ -43,7 +43,7 @@ namespace CraigBot.Bot.Modules
             var responses = (await _eightBallResponseRepository.GetAll()).ToList();
             var randomIndex = _random.Next(responses.Count);
 
-            await ReplyAsync(responses[randomIndex].Response);
+            await ReplyAsync(responses[randomIndex].Text);
         }
 
         #endregion
