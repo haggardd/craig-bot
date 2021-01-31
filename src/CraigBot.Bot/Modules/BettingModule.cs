@@ -35,8 +35,7 @@ namespace CraigBot.Bot.Modules
 
             if (!bets.Any())
             {
-                // TODO: Might want to look at a way to make these generic replies prettier
-                await ReplyAsync("There are no active bets.");
+                await MentionReply("There are no active bets.");
                 return;
             }
 
@@ -85,7 +84,7 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await ReplyAsync($"There are no active bets with ID: `{betId}`.");
+                await MentionReply($"There are no active bets with ID: `{betId}`.");
                 return;
             }
             
@@ -93,19 +92,17 @@ namespace CraigBot.Bot.Modules
             
             if (BankingHelpers.IsBelowMinimum(stake))
             {
-                await ReplyAsync($"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
+                await MentionReply($"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount}`.");
                 return;
             }
             
             if (!account.CanAfford(stake))
             {
-                // TODO: Need to make sure responses are consistent across the codebase
-                await ReplyAsync("You don't have enough funds to make that bet!");
+                await MentionReply("You don't have enough funds to make that bet.");
                 return;
             }
         
             await _bankingService.Withdraw(account, stake);
-            
             await _betService.CreateWager(Context.User, betId, stake, inFavour);
             
             await ReplyAsync($"Wager placed! {Context.User.Mention} wagered `{_options.Currency}{stake:0.00}` on bet ID: `{bet.Id}`.");
@@ -122,13 +119,13 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await ReplyAsync($"There are no active bets with ID: `{betId}`.");
+                await MentionReply($"There are no active bets with ID: `{betId}`.");
                 return;
             }
             
             if (bet.UserId != Context.User.Id)
             {
-                await ReplyAsync($"You can't end bets you didn't create.");
+                await MentionReply($"You can't end bets you didn't create.");
                 return;
             }
 

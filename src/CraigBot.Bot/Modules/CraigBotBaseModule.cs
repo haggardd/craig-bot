@@ -7,14 +7,14 @@ namespace CraigBot.Bot.Modules
     [RequireContext(ContextType.Guild)]
     public abstract class CraigBotBaseModule : ModuleBase<SocketCommandContext>
     {
-        protected async Task AddReactionAndReply(string messageText, IUserMessage userMessage, IEmote emote, 
+        protected async Task AddReactionAndMentionReply(string messageText, IUserMessage userMessage, IEmote emote, 
             EmbedBuilder embed = null)
         {
             await userMessage.AddReactionAsync(emote);
 
             await (embed == null
-                ? ReplyAsync(messageText)
-                : ReplyAsync(messageText, false, embed.Build()));
+                ? ReplyAsync($"{Context.User.Mention} -> {messageText}")
+                : ReplyAsync($"{Context.User.Mention} -> {messageText}", false, embed.Build()));
         }
 
         protected async Task ReplyAndAddReactions(string messageText, IEmote[] emotes, EmbedBuilder embed = null)
@@ -25,5 +25,8 @@ namespace CraigBot.Bot.Modules
 
             await message.AddReactionsAsync(emotes);
         }
+        
+        protected async Task MentionReply(string messageText)
+            => await ReplyAsync($"{Context.User.Mention} -> {messageText}");
     }
 }

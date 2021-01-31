@@ -61,7 +61,7 @@ namespace CraigBot.Bot.Modules
 
             if (!result.IsSuccess)
             {
-                await ReplyAsync($"`{_options.Prefix}{command}` doesn't seem to exist! Try `{_options.Prefix}help` for a full list of commands.");
+                await MentionReply($"`{_options.Prefix}{command}` doesn't seem to exist. Try `{_options.Prefix}help` for a full list of commands.");
                 return;
             }
             
