@@ -47,7 +47,7 @@ namespace CraigBot.Bot.Modules
         {
             if (choices.Length <= 1)
             {
-                await ReplyAsync("I need at least two choices to make a decision!");
+                await MentionReply("I need at least two choices to make a decision.");
                 return;
             }
             

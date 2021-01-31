@@ -24,7 +24,8 @@ namespace CraigBot.Bot.Modules
             
             if (imageUrl == null)
             {
-                await ReplyAsync("The API failed to return a dog.");
+                // TODO: Might be a good idea to make it clear what kind of response this and others are, error, warning etc...
+                await MentionReply("The API failed to return a dog.");
             }
             
             await ReplyAsync(imageUrl);
@@ -38,7 +39,7 @@ namespace CraigBot.Bot.Modules
 
             if (imageUrl == null)
             {
-                await ReplyAsync("The API failed to return a cat.");
+                await MentionReply("The API failed to return a cat.");
             }
             
             await ReplyAsync(imageUrl);
@@ -52,7 +53,7 @@ namespace CraigBot.Bot.Modules
             
             if (imageUrl == null)
             {
-                await ReplyAsync("The API failed to return a fox.");
+                await MentionReply("The API failed to return a fox.");
             }
             
             await ReplyAsync(imageUrl);
