@@ -48,7 +48,7 @@ namespace CraigBot.Bot.Modules
         {
             if (BankingHelpers.IsBelowMinimum(amount))
             {
-                await ReplyAsync($"The minimum amount you can send is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
+                await MentionReply($"The minimum amount you can send is `{_options.Currency}{BankingHelpers.MinimumAmount}`.");
                 return;
             }
             
@@ -57,7 +57,7 @@ namespace CraigBot.Bot.Modules
 
             if (!payerAccount.CanAfford(amount))
             {
-                await ReplyAsync("You don't have enough funds to make that transaction!");
+                await MentionReply("You don't have enough funds to make that transaction.");
                 return;
             }
 
@@ -79,7 +79,7 @@ namespace CraigBot.Bot.Modules
         {
             if (BankingHelpers.IsBelowMinimum(amount))
             {
-                await ReplyAsync($"The minimum amount you can grant is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
+                await MentionReply($"The minimum amount you can grant is `{_options.Currency}{BankingHelpers.MinimumAmount}`.");
                 return;
             }
             
@@ -87,7 +87,7 @@ namespace CraigBot.Bot.Modules
 
             await _bankingService.Deposit(account, amount);
             
-            await ReplyAsync($"Grant successful! {(user ?? Context.User).Mention} has been granted `{_options.Currency}{amount:0.00}`!");
+            await ReplyAsync($"Grant successful! {(user ?? Context.User).Mention} has been granted `{_options.Currency}{amount:0.00}`.");
         }
         
         [Command("fine")]
@@ -101,7 +101,7 @@ namespace CraigBot.Bot.Modules
         {
             if (BankingHelpers.IsBelowMinimum(amount))
             {
-                await ReplyAsync($"The minimum amount you can fine is `{_options.Currency}{BankingHelpers.MinimumAmount}`!");
+                await MentionReply($"The minimum amount you can fine is `{_options.Currency}{BankingHelpers.MinimumAmount}`.");
                 return;
             }
             
@@ -109,13 +109,13 @@ namespace CraigBot.Bot.Modules
             
             if (!account.CanAfford(amount))
             {
-                await ReplyAsync("That user can't afford to pay a fine of that size!");
+                await MentionReply("That user can't afford to pay a fine of that size.");
                 return;
             }
 
             await _bankingService.Withdraw(account, amount);
             
-            await ReplyAsync($"Fine successful! {user.Mention} has been fined `{_options.Currency}{amount:0.00}`!");
+            await ReplyAsync($"Fine successful! {user.Mention} has been fined `{_options.Currency}{amount:0.00}`.");
         }
         
         #endregion

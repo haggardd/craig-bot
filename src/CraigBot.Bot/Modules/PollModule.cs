@@ -29,13 +29,13 @@ namespace CraigBot.Bot.Modules
         {
             if (_pollService.Current.IsActive())
             {
-                await ReplyAsync("There is already an active poll, either end the current poll or wait for it to end.");
+                await MentionReply("There is already an active poll, either end the current poll or wait for it to end.");
                 return;
             }
             
             if (choices.Length < 2)
             {
-                await ReplyAsync("To start a poll you need at least 2 choices to choose from.");
+                await MentionReply("To start a poll you need at least 2 choices to choose from.");
                 return;
             }
 
@@ -82,21 +82,21 @@ namespace CraigBot.Bot.Modules
             // TODO: Need to have a think about how error handling is currently handled in modules, might be better to move some to the services
             if (!_pollService.Current.IsActive())
             {
-                await AddReactionAndReply("There are no active polls.", 
+                await AddReactionAndMentionReply("There are no active polls.", 
                     Context.Message, _invalidEmoji);
                 return;
             }
 
             if (_pollService.Current.HasUserVoted(userId))
             {
-                await AddReactionAndReply("You've already voted in the current poll.", 
+                await AddReactionAndMentionReply("You've already voted in the current poll.", 
                     Context.Message, _invalidEmoji);
                 return;
             }
 
             if (!_pollService.Current.IsValidVote(choice))
             {
-                await AddReactionAndReply("Invalid choice. Please vote for one of the choices in the poll message.", 
+                await AddReactionAndMentionReply("Invalid choice. Please vote for one of the choices in the poll message.", 
                     Context.Message, _invalidEmoji);
                 return;
             }
@@ -112,7 +112,7 @@ namespace CraigBot.Bot.Modules
         {
             if (!_pollService.Current.IsActive())
             {
-                await ReplyAsync("There are no active polls.");
+                await MentionReply("There are no active polls.");
                 return;
             }
 
