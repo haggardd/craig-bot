@@ -94,8 +94,7 @@ namespace CraigBot.Bot.Services
                     {
                         continue;
                     }
-
-                    // TODO: Might want to move this somewhere else if possible
+                    
                     var winnings = wager.InFavour
                         ? wager.Stake.CalculateWinnings(forOdds)
                         : wager.Stake.CalculateWinnings(againstOdds);
