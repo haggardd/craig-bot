@@ -4,7 +4,7 @@ using Discord.Commands;
 
 namespace CraigBot.Bot.TypeReaders
 {
-    public class TwoDecimalPlaceTypeReader : TypeReader
+    public class DecimalTypeReader : TypeReader
     {
         public override async Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, 
             IServiceProvider services)
