@@ -38,6 +38,6 @@
             return true;
         }
         
-        private static readonly char[] DelimiterChars = { '/', '\\', '|', ':', '.' };
+        private static readonly char[] DelimiterChars = { '/', '\\', '|' };
     }
 }
