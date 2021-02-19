@@ -26,7 +26,7 @@ namespace CraigBot.Bot.Modules
         }
 
         #region Commands
-
+        
         [Command("bets")]
         [Summary("List all active bets")]
         public async Task Bets()
@@ -146,12 +146,31 @@ namespace CraigBot.Bot.Modules
             if (betResult.WagerResults.Any())
             {
                 wagerResults = betResult.WagerResults.Aggregate("", (current, wagerResult) 
-                    => current + $"• {wagerResult.ToFormattedString()}\n");
+                    => current + $"• {wagerResult.ToFormattedString(_options.Currency)}\n");
             }
 
             embed.AddField("Wager Results", wagerResults);
             
             await ReplyAsync("", false, embed.Build());
+        }
+        
+        [Command("void")]
+        [Summary("Voids a given bet and refunds wagers.")]
+        [Example("void 3")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task Void([Summary("The bet you wish to void.")] int betId)
+        {
+            var bet = await _betService.GetActiveBetById(betId);
+
+            if (bet == null)
+            {
+                await MentionReply($"There are no active bets with ID: `{betId}`.");
+                return;
+            }
+
+            await _betService.VoidBet(bet);
+            
+            await ReplyAsync($"Bet ID: `{betId}` has been voided! All wagers have been refunded.");
         }
 
         #endregion
