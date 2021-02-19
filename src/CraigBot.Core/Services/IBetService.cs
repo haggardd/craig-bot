@@ -16,5 +16,7 @@ namespace CraigBot.Core.Services
         Task<Wager> CreateWager(IUser user, int betId, decimal stake, bool inFavour);
 
         Task<BetResult> EndBet(Bet bet, bool result);
+
+        Task VoidBet(Bet bet);
     }
 }

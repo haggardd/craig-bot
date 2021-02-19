@@ -90,27 +90,27 @@ namespace CraigBot.Bot.Services
             {
                 foreach (var wager in wagers)
                 {
-                    if (result != wager.InFavour)
+                    var returns = 0.00M;
+                    
+                    if (result == wager.InFavour)
                     {
-                        continue;
+                        returns = wager.InFavour
+                            ? wager.Stake.CalculateWinnings(forOdds)
+                            : wager.Stake.CalculateWinnings(againstOdds);
                     }
-                    
-                    var winnings = wager.InFavour
-                        ? wager.Stake.CalculateWinnings(forOdds)
-                        : wager.Stake.CalculateWinnings(againstOdds);
-                    
+
                     var bankAccount = await _bankingService.GetAccount(wager.UserId);
 
                     var wagerResult = new WagerResult
                     {
                         Username = wager.Username,
-                        Winnings = winnings,
+                        Returns = returns,
                         InFavour = wager.InFavour
                     };
                 
                     wagerResults.Add(wagerResult);
                 
-                    await _bankingService.Deposit(bankAccount, winnings);
+                    await _bankingService.Deposit(bankAccount, returns);
                 }
             }
 
@@ -126,6 +126,25 @@ namespace CraigBot.Bot.Services
             await _betRepository.UpdateBet(bet);
 
             return betResult;
+        }
+
+        public async Task VoidBet(Bet bet)
+        {
+            var wagers = (await _betRepository.GetWagersByBetId(bet.Id)).ToList();
+            
+            if (wagers.Any())
+            {
+                foreach (var wager in wagers)
+                {
+                    var bankAccount = await _bankingService.GetAccount(wager.UserId);
+
+                    await _bankingService.Deposit(bankAccount, wager.Stake);
+                }
+            }
+            
+            bet.HasEnded = true;
+
+            await _betRepository.UpdateBet(bet);
         }
     }
 }
