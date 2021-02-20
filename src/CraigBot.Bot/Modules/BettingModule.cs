@@ -52,6 +52,40 @@ namespace CraigBot.Bot.Modules
         }
         
         [Command("bet")]
+        [Summary("View an active bet and its wagers.")]
+        [Example("bet 4")]
+        public async Task Bet([Summary("The ID of the bet you wish to view.")] int betId)
+        {
+            var bet = await _betService.GetActiveBetById(betId);
+
+            if (bet == null)
+            {
+                await MentionReply($"There are no active bets with ID: `{betId}`.");
+                return;
+            }
+            
+            var wagers = (await _betService.GetWagersByBetId(betId)).ToList();
+
+            var embed = BaseBettingEmbed()
+                .WithTitle($"Bet ID: `{bet.Id}`")
+                .WithDescription($"Use `{_options.Prefix}wager` to participate.")
+                .AddField("Description", bet.Description)
+                .AddField("Odds", $"`{bet.ForOdds} <> {bet.AgainstOdds}`");
+
+            var wagersInfo = "No wagers for this bet.";
+
+            if (wagers.Any())
+            {
+                wagersInfo = wagers.Aggregate("", (current, wager) 
+                    => current + $"• {wager.ToFormattedString(_options.Currency)}\n");
+            }
+
+            embed.AddField("Wagers", wagersInfo);
+
+            await ReplyAsync("", false, embed.Build());
+        }
+        
+        [Command("bet")]
         [Summary("Create a new custom bet.")]
         [Example("bet 1/2 1/2 Will we win this game?")]
         [Example("bet 1000/1 10/1 Will Craig be kicked from this guild tonight?")]
@@ -62,7 +96,7 @@ namespace CraigBot.Bot.Modules
             var bet = await _betService.CreateBet(Context.User, description, forOdds.ToString(), againstOdds.ToString());
 
             var embed = BaseBettingEmbed()
-                .WithTitle($"Bet `ID: {bet.Id}`")
+                .WithTitle($"Bet ID: `{bet.Id}`")
                 .WithDescription($"Use `{_options.Prefix}wager` to participate.")
                 .AddField("Description", bet.Description)
                 .AddField("Odds", $"`{bet.ForOdds} <> {bet.AgainstOdds}`");
@@ -92,7 +126,7 @@ namespace CraigBot.Bot.Modules
             
             if (BankingHelpers.IsBelowMinimum(stake))
             {
-                await MentionReply($"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount}`.");
+                await MentionReply($"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount:N}`.");
                 return;
             }
             
@@ -105,7 +139,7 @@ namespace CraigBot.Bot.Modules
             await _bankingService.Withdraw(account, stake);
             await _betService.CreateWager(Context.User, betId, stake, inFavour);
             
-            await ReplyAsync($"Wager placed! {Context.User.Mention} wagered `{_options.Currency}{stake:0.00}` on bet ID: `{bet.Id}`.");
+            await ReplyAsync($"Wager placed! {Context.User.Mention} wagered `{_options.Currency}{stake:N}` on bet ID: `{bet.Id}`.");
         }
 
         [Command("result")]
@@ -136,7 +170,7 @@ namespace CraigBot.Bot.Modules
                 : "The bet went against the odds!";
 
             var embed = BaseBettingEmbed()
-                .WithTitle($"Bet Result `ID: {bet.Id}`")
+                .WithTitle($"Bet Result ID: `{bet.Id}`")
                 .WithDescription($"{bet.Description}")
                 .AddField("Odds", $"`{bet.ForOdds} <> {bet.AgainstOdds}`", true)
                 .AddField("Result", resultMessage, true);
