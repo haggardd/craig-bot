@@ -44,6 +44,13 @@ namespace CraigBot.Bot.Services
                 : bet;
         }
 
+        public async Task<IEnumerable<Wager>> GetWagersByBetId(int id)
+        {
+            var wagers = await _betRepository.GetWagersByBetId(id);
+
+            return wagers;
+        }
+
         public async Task<Bet> CreateBet(IUser user, string description, string forOdds, string againstOdds)
         {
             var bet = new Bet

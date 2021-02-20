@@ -11,6 +11,8 @@ namespace CraigBot.Core.Services
 
         Task<Bet> GetActiveBetById(int id);
 
+        Task<IEnumerable<Wager>> GetWagersByBetId(int id);
+
         Task<Bet> CreateBet(IUser user, string description, string forOdds, string againstOdds);
 
         Task<Wager> CreateWager(IUser user, int betId, decimal stake, bool inFavour);

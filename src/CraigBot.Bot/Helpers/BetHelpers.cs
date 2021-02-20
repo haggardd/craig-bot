@@ -13,13 +13,23 @@ namespace CraigBot.Bot.Helpers
             // TODO: Need to make sure text like this is consistent across the codebase
             => $"Bet ID: `{bet.Id}` |  Odds: `{bet.ForOdds} <> {bet.AgainstOdds}` | Creator: `{bet.Username}`";
 
+        public static string ToFormattedString(this Wager wager, char currency)
+        {
+            var inFavourText = wager.InFavour
+                ? "In Favour"
+                : "Against";
+            
+            return $"User: `{wager.Username}` | Stake: `{currency}{wager.Stake:N}` | `{inFavourText}`";
+        }
+            
+
         public static string ToFormattedString(this WagerResult result, char currency)
         {
             var inFavourText = result.InFavour
                 ? "In Favour"
                 : "Against";
             
-            return $"User: `{result.Username}` | Returns: `{currency}{result.Returns:0.00}` | `{inFavourText}`";
+            return $"User: `{result.Username}` | Returns: `{currency}{result.Returns:N}` | `{inFavourText}`";
         }
     }
 }
