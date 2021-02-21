@@ -126,7 +126,7 @@ namespace CraigBot.Bot.Modules
             
             if (BankingHelpers.IsBelowMinimum(stake))
             {
-                await MentionReply($"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount:N}`.");
+                await MentionReply($"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount:N2}`.");
                 return;
             }
             
@@ -139,7 +139,7 @@ namespace CraigBot.Bot.Modules
             await _bankingService.Withdraw(account, stake);
             await _betService.CreateWager(Context.User, betId, stake, inFavour);
             
-            await ReplyAsync($"Wager placed! {Context.User.Mention} wagered `{_options.Currency}{stake:N}` on bet ID: `{bet.Id}`.");
+            await ReplyAsync($"Wager placed! {Context.User.Mention} wagered `{_options.Currency}{stake:N2}` on bet ID: `{bet.Id}`.");
         }
 
         [Command("result")]
