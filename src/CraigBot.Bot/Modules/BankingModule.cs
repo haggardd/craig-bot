@@ -32,7 +32,7 @@ namespace CraigBot.Bot.Modules
 
             var embed = BaseBankingEmbed()
                 .WithTitle("Bank Statement")
-                .AddField("Balance", $"`{_options.Currency}{account.Balance:N}`");
+                .AddField("Balance", $"`{_options.Currency}{account.Balance:N2}`");
 
             await ReplyAsync("", false, embed.Build());
         }
@@ -48,7 +48,7 @@ namespace CraigBot.Bot.Modules
         {
             if (BankingHelpers.IsBelowMinimum(amount))
             {
-                await MentionReply($"The minimum amount you can send is `{_options.Currency}{BankingHelpers.MinimumAmount:N}`.");
+                await MentionReply($"The minimum amount you can send is `{_options.Currency}{BankingHelpers.MinimumAmount:N2}`.");
                 return;
             }
             
@@ -64,7 +64,7 @@ namespace CraigBot.Bot.Modules
             await _bankingService.Withdraw(payerAccount, amount);
             await _bankingService.Deposit(payeeAccount, amount);
 
-            await ReplyAsync($"Transaction successful! {Context.User.Mention} sent `{_options.Currency}{amount:N}` to {user.Mention}.");
+            await ReplyAsync($"Transaction successful! {Context.User.Mention} sent `{_options.Currency}{amount:N2}` to {user.Mention}.");
         }
         
         [Command("grant")]
@@ -79,7 +79,7 @@ namespace CraigBot.Bot.Modules
         {
             if (BankingHelpers.IsBelowMinimum(amount))
             {
-                await MentionReply($"The minimum amount you can grant is `{_options.Currency}{BankingHelpers.MinimumAmount:N}`.");
+                await MentionReply($"The minimum amount you can grant is `{_options.Currency}{BankingHelpers.MinimumAmount:N2}`.");
                 return;
             }
             
@@ -87,7 +87,7 @@ namespace CraigBot.Bot.Modules
 
             await _bankingService.Deposit(account, amount);
             
-            await ReplyAsync($"Grant successful! {(user ?? Context.User).Mention} has been granted `{_options.Currency}{amount:N}`.");
+            await ReplyAsync($"Grant successful! {(user ?? Context.User).Mention} has been granted `{_options.Currency}{amount:N2}`.");
         }
         
         [Command("fine")]
@@ -101,7 +101,7 @@ namespace CraigBot.Bot.Modules
         {
             if (BankingHelpers.IsBelowMinimum(amount))
             {
-                await MentionReply($"The minimum amount you can fine is `{_options.Currency}{BankingHelpers.MinimumAmount:N}`.");
+                await MentionReply($"The minimum amount you can fine is `{_options.Currency}{BankingHelpers.MinimumAmount:N2}`.");
                 return;
             }
             
@@ -115,7 +115,7 @@ namespace CraigBot.Bot.Modules
 
             await _bankingService.Withdraw(account, amount);
             
-            await ReplyAsync($"Fine successful! {user.Mention} has been fined `{_options.Currency}{amount:N}`.");
+            await ReplyAsync($"Fine successful! {user.Mention} has been fined `{_options.Currency}{amount:N2}`.");
         }
         
         #endregion

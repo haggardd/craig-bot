@@ -19,7 +19,7 @@ namespace CraigBot.Bot.Helpers
                 ? "In Favour"
                 : "Against";
             
-            return $"User: `{wager.Username}` | Stake: `{currency}{wager.Stake:N}` | `{inFavourText}`";
+            return $"User: `{wager.Username}` | Stake: `{currency}{wager.Stake:N2}` | `{inFavourText}`";
         }
             
 
@@ -29,7 +29,7 @@ namespace CraigBot.Bot.Helpers
                 ? "In Favour"
                 : "Against";
             
-            return $"User: `{result.Username}` | Returns: `{currency}{result.Returns:N}` | `{inFavourText}`";
+            return $"User: `{result.Username}` | Returns: `{currency}{result.Returns:N2}` | `{inFavourText}`";
         }
     }
 }
