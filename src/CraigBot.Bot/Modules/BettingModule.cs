@@ -35,7 +35,7 @@ namespace CraigBot.Bot.Modules
 
             if (!bets.Any())
             {
-                await MentionReply("There are no active bets.");
+                await MentionReply("There are no active bets.", ResponseTypes.Information);
                 return;
             }
 
@@ -60,7 +60,7 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await MentionReply($"There are no active bets with ID: `{betId}`.");
+                await MentionReply($"There are no active bets with ID: `{betId}`.", ResponseTypes.Information);
                 return;
             }
             
@@ -104,7 +104,6 @@ namespace CraigBot.Bot.Modules
             await ReplyAsync("", false, embed.Build());
         }
         
-        // TODO: Might need to change how `inFavour` is passed through
         [Command("wager")]
         [Summary("Create a new wager for an active bet.")]
         [Example("wager 4 100.00 true")]
@@ -118,7 +117,7 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await MentionReply($"There are no active bets with ID: `{betId}`.");
+                await MentionReply($"There are no active bets with ID: `{betId}`.", ResponseTypes.Information);
                 return;
             }
             
@@ -126,13 +125,13 @@ namespace CraigBot.Bot.Modules
             
             if (BankingHelpers.IsBelowMinimum(stake))
             {
-                await MentionReply($"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount:N2}`.");
+                await MentionReply($"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount:N2}`.", ResponseTypes.Information);
                 return;
             }
             
             if (!account.CanAfford(stake))
             {
-                await MentionReply("You don't have enough funds to make that bet.");
+                await MentionReply("You don't have enough funds to make that bet.", ResponseTypes.Information);
                 return;
             }
         
@@ -153,13 +152,13 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await MentionReply($"There are no active bets with ID: `{betId}`.");
+                await MentionReply($"There are no active bets with ID: `{betId}`.", ResponseTypes.Information);
                 return;
             }
             
             if (bet.UserId != Context.User.Id)
             {
-                await MentionReply($"You can't end bets you didn't create.");
+                await MentionReply($"You can't end bets you didn't create.", ResponseTypes.Information);
                 return;
             }
 
@@ -198,7 +197,7 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await MentionReply($"There are no active bets with ID: `{betId}`.");
+                await MentionReply($"There are no active bets with ID: `{betId}`.", ResponseTypes.Information);
                 return;
             }
 

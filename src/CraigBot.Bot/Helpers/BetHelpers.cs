@@ -21,8 +21,7 @@ namespace CraigBot.Bot.Helpers
             
             return $"User: `{wager.Username}` | Stake: `{currency}{wager.Stake:N2}` | `{inFavourText}`";
         }
-            
-
+        
         public static string ToFormattedString(this WagerResult result, char currency)
         {
             var inFavourText = result.InFavour
