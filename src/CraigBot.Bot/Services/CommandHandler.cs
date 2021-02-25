@@ -79,8 +79,8 @@ namespace CraigBot.Bot.Services
                     $"Exception thrown! `{_options.Prefix}{command.Value.Name}` threw an exception, this has been logged.",
                 _ => result.ToString()
             };
-
-            await context.Channel.SendMessageAsync(message);
+            
+            await context.Channel.SendMessageAsync($"{new Emoji("‼")} {context.User.Mention} -> {message}");
         }
     }
 }

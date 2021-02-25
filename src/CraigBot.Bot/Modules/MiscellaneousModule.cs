@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CraigBot.Bot.Attributes;
+using CraigBot.Bot.Common;
 using Discord.Commands;
 using Discord.WebSocket;
 
@@ -47,7 +48,7 @@ namespace CraigBot.Bot.Modules
         {
             if (choices.Length <= 1)
             {
-                await MentionReply("I need at least two choices to make a decision.");
+                await MentionReply("I need at least two choices to make a decision.", ResponseTypes.Information);
                 return;
             }
             

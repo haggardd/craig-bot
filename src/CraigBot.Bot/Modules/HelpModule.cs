@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using CraigBot.Bot.Attributes;
+using CraigBot.Bot.Common;
 using CraigBot.Bot.Configuration;
 using Discord;
 using Discord.Commands;
@@ -61,7 +62,7 @@ namespace CraigBot.Bot.Modules
 
             if (!result.IsSuccess)
             {
-                await MentionReply($"`{_options.Prefix}{command}` doesn't seem to exist. Try `{_options.Prefix}help` for a full list of commands.");
+                await MentionReply($"`{_options.Prefix}{command}` doesn't seem to exist. Try `{_options.Prefix}help` for a full list of commands.", ResponseTypes.Information);
                 return;
             }
             

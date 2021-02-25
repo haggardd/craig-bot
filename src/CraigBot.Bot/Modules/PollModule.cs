@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using CraigBot.Bot.Attributes;
+using CraigBot.Bot.Common;
 using CraigBot.Bot.Helpers;
 using CraigBot.Core.Services;
 using Discord;
@@ -29,13 +30,13 @@ namespace CraigBot.Bot.Modules
         {
             if (_pollService.Current.IsActive())
             {
-                await MentionReply("There is already an active poll, either end the current poll or wait for it to end.");
+                await MentionReply("There is already an active poll, either end the current poll or wait for it to end.", ResponseTypes.Information);
                 return;
             }
             
             if (choices.Length < 2)
             {
-                await MentionReply("To start a poll you need at least 2 choices to choose from.");
+                await MentionReply("To start a poll you need at least 2 choices to choose from.", ResponseTypes.Information);
                 return;
             }
 
@@ -83,21 +84,21 @@ namespace CraigBot.Bot.Modules
             if (!_pollService.Current.IsActive())
             {
                 await AddReactionAndMentionReply("There are no active polls.", 
-                    Context.Message, _invalidEmoji);
+                    Context.Message, _invalidEmoji, null, ResponseTypes.Information);
                 return;
             }
 
             if (_pollService.Current.HasUserVoted(userId))
             {
                 await AddReactionAndMentionReply("You've already voted in the current poll.", 
-                    Context.Message, _invalidEmoji);
+                    Context.Message, _invalidEmoji, null, ResponseTypes.Information);
                 return;
             }
 
             if (!_pollService.Current.IsValidVote(choice))
             {
                 await AddReactionAndMentionReply("Invalid choice. Please vote for one of the choices in the poll message.", 
-                    Context.Message, _invalidEmoji);
+                    Context.Message, _invalidEmoji, null, ResponseTypes.Information);
                 return;
             }
 
@@ -112,7 +113,7 @@ namespace CraigBot.Bot.Modules
         {
             if (!_pollService.Current.IsActive())
             {
-                await MentionReply("There are no active polls.");
+                await MentionReply("There are no active polls.", ResponseTypes.Information);
                 return;
             }
 
