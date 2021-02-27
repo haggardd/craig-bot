@@ -5,6 +5,7 @@ using Discord.Commands;
 
 namespace CraigBot.Bot.Modules
 {
+    // TODO: Check if inline replies are working
     [RequireContext(ContextType.Guild)]
     public abstract class CraigBotBaseModule : ModuleBase<SocketCommandContext>
     {
