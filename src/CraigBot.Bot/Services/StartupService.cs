@@ -62,11 +62,6 @@ namespace CraigBot.Bot.Services
 
         private async Task CheckModuleFlags()
         {
-            if (!_moduleFlags.Audio)
-            {
-                await _commandService.RemoveModuleAsync<AudioModule>();
-            }
-            
             if (!_moduleFlags.Banking)
             {
                 await _commandService.RemoveModuleAsync<BankingModule>();

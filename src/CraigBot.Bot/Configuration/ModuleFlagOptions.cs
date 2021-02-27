@@ -4,8 +4,6 @@
     {
         public const string ConfigurationHeader = "ModuleFlags";
         
-        public bool Audio { get; set; }
-        
         public bool Banking { get; set; }
         
         public bool Betting { get; set; }

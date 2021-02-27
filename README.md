@@ -68,7 +68,6 @@ Craig can be easily configured to your liking by using your `config.json` file. 
     "Currency": "£"
   },
   "ModuleFlags": {
-    "Audio": true,
     "Banking": true,
     "Betting": true,
     "Fun": true,

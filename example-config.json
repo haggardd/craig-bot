@@ -8,7 +8,6 @@
     "Currency": "£"
   },
   "ModuleFlags": {
-    "Audio": true,
     "Banking": true,
     "Betting": true,
     "Fun": true,

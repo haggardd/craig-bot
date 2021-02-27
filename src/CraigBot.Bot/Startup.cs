@@ -68,7 +68,6 @@ namespace CraigBot.Bot
                 .AddTransient<IBetRepository, BetRepository>()
                 .AddSingleton<ICommandHandler, CommandHandler>()
                 .AddSingleton<IStartupService, StartupService>()
-                .AddSingleton<IAudioService, AudioService>()
                 .AddSingleton<IPollService, PollService>()
                 .AddTransient<IBankingService, BankingService>()
                 .AddTransient<IBetService, BetService>()
