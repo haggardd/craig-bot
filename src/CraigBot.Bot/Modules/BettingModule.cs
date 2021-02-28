@@ -35,7 +35,7 @@ namespace CraigBot.Bot.Modules
 
             if (!bets.Any())
             {
-                await MentionReply("There are no active bets.", ResponseTypes.Information);
+                await InlineReply(Context.Message, "There are no active bets");
                 return;
             }
 
@@ -60,7 +60,7 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await MentionReply($"There are no active bets with ID: `{betId}`.", ResponseTypes.Information);
+                await InlineReply(Context.Message, $"There are no active bets with ID: `{betId}`");
                 return;
             }
             
@@ -117,7 +117,7 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await MentionReply($"There are no active bets with ID: `{betId}`.", ResponseTypes.Information);
+                await InlineReply(Context.Message, $"There are no active bets with ID: `{betId}`");
                 return;
             }
             
@@ -125,20 +125,20 @@ namespace CraigBot.Bot.Modules
             
             if (BankingHelpers.IsBelowMinimum(stake))
             {
-                await MentionReply($"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount:N2}`.", ResponseTypes.Information);
+                await InlineReply(Context.Message, $"The minimum amount you can stake is `{_options.Currency}{BankingHelpers.MinimumAmount:N2}`");
                 return;
             }
             
             if (!account.CanAfford(stake))
             {
-                await MentionReply("You don't have enough funds to make that bet.", ResponseTypes.Information);
+                await InlineReply(Context.Message, "You don't have enough funds to make that bet");
                 return;
             }
         
             await _bankingService.Withdraw(account, stake);
             await _betService.CreateWager(Context.User, betId, stake, inFavour);
             
-            await ReplyAsync($"Wager placed! {Context.User.Mention} wagered `{_options.Currency}{stake:N2}` on bet ID: `{bet.Id}`.");
+            await ReplyAsync($"Wager placed! {Context.User.Mention} wagered `{_options.Currency}{stake:N2}` on bet ID: `{bet.Id}`");
         }
 
         [Command("result")]
@@ -152,13 +152,13 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await MentionReply($"There are no active bets with ID: `{betId}`.", ResponseTypes.Information);
+                await InlineReply(Context.Message, $"There are no active bets with ID: `{betId}`");
                 return;
             }
             
             if (bet.UserId != Context.User.Id)
             {
-                await MentionReply($"You can't end bets you didn't create.", ResponseTypes.Information);
+                await InlineReply(Context.Message, $"You can't end bets you didn't create");
                 return;
             }
 
@@ -197,13 +197,13 @@ namespace CraigBot.Bot.Modules
 
             if (bet == null)
             {
-                await MentionReply($"There are no active bets with ID: `{betId}`.", ResponseTypes.Information);
+                await InlineReply(Context.Message, $"There are no active bets with ID: `{betId}`");
                 return;
             }
 
             await _betService.VoidBet(bet);
             
-            await ReplyAsync($"Bet ID: `{betId}` has been voided! All wagers have been refunded.");
+            await ReplyAsync($"Bet ID: `{betId}` has been voided! All wagers have been refunded");
         }
 
         #endregion

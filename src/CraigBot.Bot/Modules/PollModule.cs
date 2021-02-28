@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using CraigBot.Bot.Attributes;
-using CraigBot.Bot.Common;
 using CraigBot.Bot.Helpers;
 using CraigBot.Core.Services;
 using Discord;
@@ -30,13 +29,13 @@ namespace CraigBot.Bot.Modules
         {
             if (_pollService.Current.IsActive())
             {
-                await MentionReply("There is already an active poll, either end the current poll or wait for it to end.", ResponseTypes.Information);
+                await InlineReply(Context.Message, "There is already an active poll, either end the current poll or wait for it to end");
                 return;
             }
             
             if (choices.Length < 2)
             {
-                await MentionReply("To start a poll you need at least 2 choices to choose from.", ResponseTypes.Information);
+                await InlineReply(Context.Message, "To start a poll you need at least 2 choices to choose from");
                 return;
             }
 
@@ -70,7 +69,9 @@ namespace CraigBot.Bot.Modules
             var embed = BasePollEmbed()
                 .WithTitle(question);
 
-            await ReplyAndAddReactions("", _emojiThumbs, embed);
+            var message = await ReplyAsync("", false, embed.Build());
+            
+            await message.AddReactionsAsync(_emojiThumbs);
         }
 
         [Command("vote")]
@@ -83,22 +84,25 @@ namespace CraigBot.Bot.Modules
             // TODO: Need to have a think about how error handling is currently handled in modules, might be better to move some to the services
             if (!_pollService.Current.IsActive())
             {
-                await AddReactionAndMentionReply("There are no active polls.", 
-                    Context.Message, _invalidEmoji, null, ResponseTypes.Information);
+                await Context.Message.AddReactionAsync(_invalidEmoji);
+                await InlineReply(Context.Message,"There are no active polls");
+                
                 return;
             }
 
             if (_pollService.Current.HasUserVoted(userId))
             {
-                await AddReactionAndMentionReply("You've already voted in the current poll.", 
-                    Context.Message, _invalidEmoji, null, ResponseTypes.Information);
+                await Context.Message.AddReactionAsync(_invalidEmoji);
+                await InlineReply(Context.Message, "You've already voted in the current poll");
+                
                 return;
             }
 
             if (!_pollService.Current.IsValidVote(choice))
             {
-                await AddReactionAndMentionReply("Invalid choice. Please vote for one of the choices in the poll message.", 
-                    Context.Message, _invalidEmoji, null, ResponseTypes.Information);
+                await Context.Message.AddReactionAsync(_invalidEmoji);
+                await InlineReply(Context.Message, "Invalid choice. Please vote for one of the choices in the poll message");
+                
                 return;
             }
 
@@ -113,7 +117,7 @@ namespace CraigBot.Bot.Modules
         {
             if (!_pollService.Current.IsActive())
             {
-                await MentionReply("There are no active polls.", ResponseTypes.Information);
+                await InlineReply(Context.Message, "There are no active polls");
                 return;
             }
 

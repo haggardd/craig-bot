@@ -76,17 +76,17 @@ namespace CraigBot.Bot.Modules
         [Command("ping")]
         [Summary("A test command, replies with 'Pong!'.")]
         public async Task Ping()
-            => await MentionReply("Pong!");
+            => await InlineReply(Context.Message, "Pong!");
         
         [Command("latency")]
         [Summary("Replies with the Bot's latency.")]
         public async Task Latency()
-            => await MentionReply($"Latency: `{Context.Client.Latency}ms`");
+            => await InlineReply(Context.Message, $"Latency: `{Context.Client.Latency}ms`");
         
         [Command("git")]
         [Summary("Replies with the Bot's GitHub repo.")]
         public async Task Git()
-            => await MentionReply("Check out my codebase on Github! https://github.com/haggardd/craig-bot");
+            => await InlineReply(Context.Message, "Check out my codebase on Github! https://github.com/haggardd/craig-bot");
 
         #endregion
 
