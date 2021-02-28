@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using CraigBot.Bot.Common;
 using CraigBot.Core.Services;
 using Discord.Commands;
 
@@ -25,7 +24,7 @@ namespace CraigBot.Bot.Modules
             
             if (imageUrl == null)
             {
-                await MentionReply("The API failed to return a dog.", ResponseTypes.Error);
+                await InlineReply(Context.Message, "The API failed to return a dog");
             }
             
             await ReplyAsync(imageUrl);
@@ -39,7 +38,7 @@ namespace CraigBot.Bot.Modules
 
             if (imageUrl == null)
             {
-                await MentionReply("The API failed to return a cat.", ResponseTypes.Error);
+                await InlineReply(Context.Message, "The API failed to return a cat");
             }
             
             await ReplyAsync(imageUrl);
@@ -53,7 +52,7 @@ namespace CraigBot.Bot.Modules
             
             if (imageUrl == null)
             {
-                await MentionReply("The API failed to return a fox.", ResponseTypes.Error);
+                await InlineReply(Context.Message, "The API failed to return a fox");
             }
             
             await ReplyAsync(imageUrl);
