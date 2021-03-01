@@ -167,15 +167,15 @@ namespace CraigBot.Bot.Modules
                 .WithColor(Color.Gold)
                 .WithAuthor(Context.User.Username, Context.User.GetAvatarUrl());
         
-        private readonly IEmote _tickEmoji = new Emoji("\u2705");
+        private readonly IEmote _tickEmoji = new Emoji("✅");
         
-        private readonly IEmote _invalidEmoji = new Emoji("\uD83D\uDEAB");
-
+        private readonly IEmote _invalidEmoji = new Emoji("🚫");
+        
         private readonly IEmote[] _emojiThumbs =
         {
-            new Emoji("\uD83D\uDC4D"),                    // Thumbs up
-            new Emoji("\uD83D\uDC4E"),                    // Thumbs down
-            new Emoji("\uD83E\uDD37\u200D\u2642\uFE0F"),  // Shrug
+            new Emoji("👍"),
+            new Emoji("👎"),
+            new Emoji("🤷‍♂️")
         };
         
         #endregion
