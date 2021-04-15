@@ -8,34 +8,33 @@ namespace CraigBot.Infrastructure.Repositories
 {
     public class BankAccountRepository : IBankAccountRepository
     {
-        private readonly CraigBotDbContext _context;
-        
-        public BankAccountRepository(CraigBotDbContext context)
-        {
-            _context = context;
-        }
-
         public async Task<BankAccount> GetByUserId(ulong id)
         {
-            var bank = await _context.BankAccounts.SingleOrDefaultAsync(x => x.UserId == id);
+            await using var context = new CraigBotDbContext();
+            
+            var bank = await context.BankAccounts.SingleOrDefaultAsync(x => x.UserId == id);
 
             return bank;
         }
 
         public async Task<BankAccount> Create(BankAccount account)
         {
-            var newBank = (await _context.BankAccounts.AddAsync(account)).Entity;
+            await using var context = new CraigBotDbContext();
+            
+            var newBank = (await context.BankAccounts.AddAsync(account)).Entity;
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return newBank;
         }
 
         public async Task<BankAccount> Update(BankAccount account)
         {
-            var updatedAccount = _context.Update(account).Entity;
+            await using var context = new CraigBotDbContext();
+            
+            var updatedAccount = context.BankAccounts.Update(account).Entity;
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return updatedAccount;
         }

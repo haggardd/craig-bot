@@ -5,7 +5,7 @@ using Discord;
 
 namespace CraigBot.Core.Services
 {
-    public interface IBetService
+    public interface IBettingService
     {
         Task<IEnumerable<Bet>> GetAllActiveBets();
 

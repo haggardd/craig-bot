@@ -15,5 +15,7 @@
         public decimal StartingBalance { get; set; }
         
         public char Currency { get; set; }
+        
+        public int MarketUpdateRate { get; set; }
     }
 }

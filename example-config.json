@@ -5,7 +5,8 @@
     "DmHelp": false,
     "MessageReward": 10,
     "StartingBalance": 10000,
-    "Currency": "£"
+    "Currency": "£",
+    "MarketUpdateRate": 30
   },
   "ModuleFlags": {
     "Banking": true,

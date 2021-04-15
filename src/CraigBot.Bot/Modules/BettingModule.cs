@@ -15,13 +15,13 @@ namespace CraigBot.Bot.Modules
     public class BettingModule : CraigBotBaseModule
     {
         private readonly IBankingService _bankingService;
-        private readonly IBetService _betService;
+        private readonly IBettingService _bettingService;
         private readonly BotOptions _options;
 
-        public BettingModule(IBankingService bankingService, IBetService betService, IOptions<BotOptions> options)
+        public BettingModule(IBankingService bankingService, IBettingService bettingService, IOptions<BotOptions> options)
         {
             _bankingService = bankingService;
-            _betService = betService;
+            _bettingService = bettingService;
             _options = options.Value;
         }
 
@@ -31,7 +31,7 @@ namespace CraigBot.Bot.Modules
         [Summary("List all active bets")]
         public async Task Bets()
         {
-            var bets = (await _betService.GetAllActiveBets()).ToList();
+            var bets = (await _bettingService.GetAllActiveBets()).ToList();
 
             if (!bets.Any())
             {
@@ -56,7 +56,7 @@ namespace CraigBot.Bot.Modules
         [Example("bet 4")]
         public async Task Bet([Summary("The ID of the bet you wish to view.")] int betId)
         {
-            var bet = await _betService.GetActiveBetById(betId);
+            var bet = await _bettingService.GetActiveBetById(betId);
 
             if (bet == null)
             {
@@ -64,7 +64,7 @@ namespace CraigBot.Bot.Modules
                 return;
             }
             
-            var wagers = (await _betService.GetWagersByBetId(betId)).ToList();
+            var wagers = (await _bettingService.GetWagersByBetId(betId)).ToList();
 
             var embed = BaseBettingEmbed()
                 .WithTitle($"Bet ID: `{bet.Id}`")
@@ -93,7 +93,7 @@ namespace CraigBot.Bot.Modules
             [Summary("The fractional odds against this bet.")] Fraction againstOdds,
             [Remainder][Summary("The description for this bet.")] string description)
         {
-            var bet = await _betService.CreateBet(Context.User, description, forOdds.ToString(), againstOdds.ToString());
+            var bet = await _bettingService.CreateBet(Context.User, description, forOdds.ToString(), againstOdds.ToString());
 
             var embed = BaseBettingEmbed()
                 .WithTitle($"Bet ID: `{bet.Id}`")
@@ -113,7 +113,7 @@ namespace CraigBot.Bot.Modules
             [Summary("Your stake in the bet")] decimal stake, 
             [Summary("If you're betting in favour or against the bet.")] bool inFavour)
         {
-            var bet = await _betService.GetActiveBetById(betId);
+            var bet = await _bettingService.GetActiveBetById(betId);
 
             if (bet == null)
             {
@@ -136,7 +136,7 @@ namespace CraigBot.Bot.Modules
             }
         
             await _bankingService.Withdraw(account, stake);
-            await _betService.CreateWager(Context.User, betId, stake, inFavour);
+            await _bettingService.CreateWager(Context.User, betId, stake, inFavour);
             
             await ReplyAsync($"Wager placed! {Context.User.Mention} wagered `{_options.Currency}{stake:N2}` on bet ID: `{bet.Id}`");
         }
@@ -148,7 +148,7 @@ namespace CraigBot.Bot.Modules
         public async Task Result([Summary("The bet you wish to end.")] int betId,
             [Summary("The result of the bet")] bool result)
         {
-            var bet = await _betService.GetActiveBetById(betId);
+            var bet = await _bettingService.GetActiveBetById(betId);
 
             if (bet == null)
             {
@@ -162,7 +162,7 @@ namespace CraigBot.Bot.Modules
                 return;
             }
 
-            var betResult = await _betService.EndBet(bet, result);
+            var betResult = await _bettingService.EndBet(bet, result);
             
             var resultMessage = result
                 ? "The bet came through!"
@@ -193,7 +193,7 @@ namespace CraigBot.Bot.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Void([Summary("The bet you wish to void.")] int betId)
         {
-            var bet = await _betService.GetActiveBetById(betId);
+            var bet = await _bettingService.GetActiveBetById(betId);
 
             if (bet == null)
             {
@@ -201,7 +201,7 @@ namespace CraigBot.Bot.Modules
                 return;
             }
 
-            await _betService.VoidBet(bet);
+            await _bettingService.VoidBet(bet);
             
             await ReplyAsync($"Bet ID: `{betId}` has been voided! All wagers have been refunded");
         }

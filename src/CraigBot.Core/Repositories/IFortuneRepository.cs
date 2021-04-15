@@ -4,8 +4,8 @@ using CraigBot.Core.Models;
 
 namespace CraigBot.Core.Repositories
 {
-    public interface IEightBallResponseRepository
+    public interface IFortuneRepository
     {
-        Task<IEnumerable<EightBallResponse>> GetAll();
+        Task<IEnumerable<Fortune>> GetAll();
     }
 }
