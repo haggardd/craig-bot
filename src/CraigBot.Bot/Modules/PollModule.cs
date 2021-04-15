@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using CraigBot.Bot.Attributes;
+using CraigBot.Bot.Configuration;
 using CraigBot.Bot.Helpers;
 using CraigBot.Core.Services;
 using Discord;
 using Discord.Commands;
+using Microsoft.Extensions.Options;
 
 namespace CraigBot.Bot.Modules
 {
@@ -12,14 +14,17 @@ namespace CraigBot.Bot.Modules
     public class PollModule : CraigBotBaseModule
     {
         private readonly IPollService _pollService;
+        private readonly BotOptions _options;
 
-        public PollModule(IPollService pollService)
+        public PollModule(IPollService pollService, IOptions<BotOptions> options)
         {
             _pollService = pollService;
+            _options = options.Value;
         }
         
         #region Commands
         
+        // TODO: Improve the way poll results are displayed
         [Command("poll")]
         [Summary("Creates a poll with a set duration and multiple choices.")]
         [Example("poll \"What shall we play?\" 10 \"CS:GO\" \"Red Dead\" \"Sea of Thieves\"")]
@@ -48,7 +53,7 @@ namespace CraigBot.Bot.Modules
             
             var embed = BasePollEmbed()
                 .WithTitle(question)
-                .WithDescription("Use `!vote` with choice number to cast your vote!")
+                .WithDescription($"Use `{_options.Prefix}vote` with choice number to cast your vote!")
                 .WithFooter(f => f.Text = $"Poll ends {duration} seconds from message sent")
                 .AddField("Choices: ", choicesText);
 

@@ -7,11 +7,19 @@ namespace CraigBot.Infrastructure.Database
 {
     public class CraigBotDbContext : DbContext
     {
-        public DbSet<Fortune> FortuneCookies { get; set; }
-        public DbSet<EightBallResponse> EightBallResponses { get; set; }
+        public DbSet<Fortune> Fortunes { get; set; }
+        
+        public DbSet<AskResponse> AskResponses { get; set; }
+        
         public DbSet<BankAccount> BankAccounts { get; set; }
+        
         public DbSet<Bet> Bets { get; set; }
+        
         public DbSet<Wager> Wagers { get; set; }
+        
+        public DbSet<Stock> Stocks { get; set; }
+        
+        public DbSet<Investment> Investments { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,16 +39,16 @@ namespace CraigBot.Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Fortune Cookie
-            modelBuilder.Entity<Fortune>().ToTable("FortuneCookie");
+            modelBuilder.Entity<Fortune>().ToTable("Fortune");
             modelBuilder.Entity<Fortune>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Text).IsRequired();
             });
             
-            // Eight-Ball Response
-            modelBuilder.Entity<EightBallResponse>().ToTable("EightBallResponse");
-            modelBuilder.Entity<EightBallResponse>(entity =>
+            // Ask Response
+            modelBuilder.Entity<AskResponse>().ToTable("AskResponse");
+            modelBuilder.Entity<AskResponse>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Text).IsRequired();
@@ -79,6 +87,30 @@ namespace CraigBot.Infrastructure.Database
                 entity.Property(e => e.Username).IsRequired();
                 entity.Property(e => e.Stake).IsRequired();
                 entity.Property(e => e.InFavour).IsRequired();
+            });
+            
+            // Stock
+            modelBuilder.Entity<Stock>().ToTable("Stock");
+            modelBuilder.Entity<Stock>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Ticker).IsRequired();
+                entity.Property(e => e.Price).IsRequired();
+                entity.Property(e => e.High).IsRequired();
+                entity.Property(e => e.Low).IsRequired();
+                entity.Property(e => e.PreviousPrice).IsRequired();
+                entity.Property(e => e.LastUpdate).IsRequired();
+            });
+            
+            // Investment
+            modelBuilder.Entity<Investment>().ToTable("Investment");
+            modelBuilder.Entity<Investment>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.UserId).IsRequired();
+                entity.Property(e => e.StockId).IsRequired();
+                entity.Property(e => e.Amount).IsRequired();
+                entity.Property(e => e.BuyPrice).IsRequired();
             });
 
             base.OnModelCreating(modelBuilder);

@@ -6,16 +6,12 @@ namespace CraigBot.Core.Repositories
 {
     public interface IBetRepository
     {
-        Task<IEnumerable<Bet>> GetAllBets();
+        Task<IEnumerable<Bet>> GetAll();
 
         Task<Bet> GetBetById(int id);
 
-        Task<IEnumerable<Wager>> GetWagersByBetId(int id);
+        Task<Bet> Create(Bet bet);
 
-        Task<Bet> CreateBet(Bet bet);
-
-        Task<Wager> CreateWager(Wager wager);
-
-        Task<Bet> UpdateBet(Bet bet);
+        Task<Bet> Update(Bet bet);
     }
 }

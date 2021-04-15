@@ -8,24 +8,18 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.3" />
       <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\CraigBot.Core\CraigBot.Core.csproj" />
+    </ItemGroup>
 
     <ItemGroup>
-      <None Update="Repositories\Data\fortunes.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="Repositories\Data\eightBallResponses.json">
+      <None Update="Database\Data\askResponses.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Database\Data\fortunes.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Database\Data\eightBallResponses.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\CraigBot.Core\CraigBot.Core.csproj" />
     </ItemGroup>
 
 </Project>

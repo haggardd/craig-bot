@@ -4,7 +4,7 @@ using CraigBot.Core.Models;
 
 namespace CraigBot.Bot.Helpers
 {
-    public static class BetHelpers
+    public static class BettingHelpers
     {
         public static decimal CalculateWinnings(this decimal wager, Fraction odds)
             => Math.Round(wager * odds.Numerator / odds.Denominator, 2);

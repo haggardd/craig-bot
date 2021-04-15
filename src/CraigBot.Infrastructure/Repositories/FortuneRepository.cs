@@ -7,18 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CraigBot.Infrastructure.Repositories
 {
-    public class FortuneCookieRepository : IFortuneCookieRepository
+    public class FortuneRepository : IFortuneRepository
     {
-        private readonly CraigBotDbContext _context;
-        
-        public FortuneCookieRepository(CraigBotDbContext context)
-        {
-            _context = context;
-        }
-        
+        // TODO: Could probably store these on first fetch
         public async Task<IEnumerable<Fortune>> GetAll()
         {
-            var cookies = await _context.FortuneCookies.ToListAsync();
+            await using var context = new CraigBotDbContext();
+            
+            var cookies = await context.Fortunes.ToListAsync();
 
             return cookies;
         }

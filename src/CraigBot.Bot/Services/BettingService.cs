@@ -10,20 +10,23 @@ using Discord;
 
 namespace CraigBot.Bot.Services
 {
-    public class BetService : IBetService
+    public class BettingService : IBettingService
     {
         private readonly IBetRepository _betRepository;
+        private readonly IWagerRepository _wagerRepository;
         private readonly IBankingService _bankingService;
         
-        public BetService(IBetRepository betRepository, IBankingService bankingService)
+        public BettingService(IBetRepository betRepository, IWagerRepository wagerRepository,
+            IBankingService bankingService)
         {
             _betRepository = betRepository;
+            _wagerRepository = wagerRepository;
             _bankingService = bankingService;
         }
         
         public async Task<IEnumerable<Bet>> GetAllActiveBets()
         {
-            var bets = await _betRepository.GetAllBets();
+            var bets = await _betRepository.GetAll();
 
             var activeBets = bets.Where(x => !x.HasEnded);
 
@@ -46,7 +49,7 @@ namespace CraigBot.Bot.Services
 
         public async Task<IEnumerable<Wager>> GetWagersByBetId(int id)
         {
-            var wagers = await _betRepository.GetWagersByBetId(id);
+            var wagers = await _wagerRepository.GetAllByBetId(id);
 
             return wagers;
         }
@@ -63,7 +66,7 @@ namespace CraigBot.Bot.Services
                 HasEnded = false
             };
 
-            var newBet = await _betRepository.CreateBet(bet);
+            var newBet = await _betRepository.Create(bet);
 
             return newBet;
         }
@@ -79,14 +82,14 @@ namespace CraigBot.Bot.Services
                 InFavour = inFavour
             };
 
-            var newWager = await _betRepository.CreateWager(wager);
+            var newWager = await _wagerRepository.Create(wager);
 
             return newWager;
         }
 
         public async Task<BetResult> EndBet(Bet bet, bool result)
         {
-            var wagers = (await _betRepository.GetWagersByBetId(bet.Id)).ToList();
+            var wagers = (await GetWagersByBetId(bet.Id)).ToList();
 
             var wagerResults = new List<WagerResult>();
 
@@ -130,14 +133,16 @@ namespace CraigBot.Bot.Services
             
             bet.HasEnded = true;
 
-            await _betRepository.UpdateBet(bet);
+            await _betRepository.Update(bet);
+            // TODO: This will need testing
+            await _wagerRepository.DeleteRange(wagers);
 
             return betResult;
         }
 
         public async Task VoidBet(Bet bet)
         {
-            var wagers = (await _betRepository.GetWagersByBetId(bet.Id)).ToList();
+            var wagers = (await GetWagersByBetId(bet.Id)).ToList();
             
             if (wagers.Any())
             {
@@ -151,7 +156,7 @@ namespace CraigBot.Bot.Services
             
             bet.HasEnded = true;
 
-            await _betRepository.UpdateBet(bet);
+            await _betRepository.Update(bet);
         }
     }
 }

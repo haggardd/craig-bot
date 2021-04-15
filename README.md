@@ -65,7 +65,8 @@ Craig can be easily configured to your liking by using your `config.json` file. 
     "DmHelp": false,
     "MessageReward": 10,
     "StartingBalance": 10000,
-    "Currency": "£"
+    "Currency": "£",
+    "MarketUpdateRate": 30
   },
   "ModuleFlags": {
     "Banking": true,
@@ -89,6 +90,7 @@ Craig can be easily configured to your liking by using your `config.json` file. 
 - `MessageReward` - The amount of points/funds rewarded for posting a message, setting it to anything less than `0.01` will result in no rewards
 - `StartingBalance` - The starting point/fund balance for new or existing users, setting it to anything less than `0.01` will result in a `0` starting balance
 - `Currency` - The currency symbol you wish to prefix points/funds with, i.e. `£10.00`, `P10.00`, `$10.00`, etc...
+- `MarketUpdateRate` - The rate (minutes) at which the stock market prices are updated
 
 ### ModuleFlags
 
