@@ -25,10 +25,14 @@ namespace CraigBot.Bot.Helpers
             // https://en.wikipedia.org/wiki/Geometric_Brownian_motion
             // https://github.com/crodriguezvega/geometric-brownian-motion/blob/master/src/ViewModels/ViewModel.cs
 
-            // TODO: Test 'Math.Ceiling' works as intended
+            if (stock.Price == 0)
+            {
+                stock.Price = 1;
+            }
+
             var range = stock.Price / 4;
-            var highEnd = (int) (stock.Price + Math.Ceiling(range));
-            var lowEnd = (int) (stock.Price - Math.Ceiling(range));
+            var highEnd = (int) (stock.Price + range);
+            var lowEnd = (int) (stock.Price - range);
             
             var rng = new Random();
             

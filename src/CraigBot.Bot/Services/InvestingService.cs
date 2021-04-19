@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CraigBot.Bot.Configuration;
 using CraigBot.Bot.Helpers;
+using CraigBot.Core.Mappers;
 using CraigBot.Core.Models;
 using CraigBot.Core.Repositories;
 using CraigBot.Core.Services;
@@ -70,15 +71,7 @@ namespace CraigBot.Bot.Services
             {
                 var stock = stocks.First(x => x.Id == investment.StockId);
                 
-                // TODO: Might be a good idea to make some mappers for this stuff
-                var portfolioItem = new PortfolioItem
-                {
-                    Id = investment.Id,
-                    StockTicker = stock.Ticker,
-                    Amount = investment.Amount,
-                    BuyPrice = investment.BuyPrice,
-                    CurrentPrice = stock.Price
-                };
+                var portfolioItem = investment.ToPortfolioItem(stock);
                 
                 portfolio.Add(portfolioItem);
             }

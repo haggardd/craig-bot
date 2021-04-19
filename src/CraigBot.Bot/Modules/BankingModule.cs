@@ -181,7 +181,6 @@ namespace CraigBot.Bot.Modules
             await ReplyAsync($"Investment made! {Context.User.Mention} bought `{amount}` of `{stock.Ticker}` priced at `{_options.Currency}{stock.Price:N2}`, making a total investment of `{_options.Currency}{price:N2}`");
         }
         
-        // TODO: This needs testing
         [Command("sell")]
         [Summary("Sell a specific amount of stock from your portfolio.")]
         public async Task Sell([Summary("The portfolio ID of the stock you wish to sell.")] int portfolioId, 
