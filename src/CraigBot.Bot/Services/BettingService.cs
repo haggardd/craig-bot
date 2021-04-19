@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CraigBot.Bot.Common;
 using CraigBot.Bot.Helpers;
+using CraigBot.Core.Mappers;
 using CraigBot.Core.Models;
 using CraigBot.Core.Repositories;
 using CraigBot.Core.Services;
@@ -111,12 +112,7 @@ namespace CraigBot.Bot.Services
 
                     var bankAccount = await _bankingService.GetAccount(wager.UserId);
 
-                    var wagerResult = new WagerResult
-                    {
-                        Username = wager.Username,
-                        Returns = returns,
-                        InFavour = wager.InFavour
-                    };
+                    var wagerResult = wager.ToWagerResult(returns);
                 
                     wagerResults.Add(wagerResult);
                 
@@ -124,12 +120,7 @@ namespace CraigBot.Bot.Services
                 }
             }
 
-            var betResult = new BetResult
-            {
-                Username = bet.Username,
-                Description = bet.Description,
-                WagerResults = wagerResults
-            };
+            var betResult = bet.ToBetResult(wagerResults);
             
             bet.HasEnded = true;
 
