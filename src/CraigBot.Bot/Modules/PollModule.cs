@@ -24,7 +24,6 @@ namespace CraigBot.Bot.Modules
         
         #region Commands
         
-        // TODO: Improve the way poll results are displayed
         [Command("poll")]
         [Summary("Creates a poll with a set duration and multiple choices.")]
         [Example("poll \"What shall we play?\" 10 \"CS:GO\" \"Red Dead\" \"Sea of Thieves\"")]
@@ -133,6 +132,7 @@ namespace CraigBot.Bot.Modules
 
         #region Helpers
 
+        // TODO: Improve the way poll results are displayed
         private async Task EndPoll()
         {
             if (!_pollService.Current.IsActive())
@@ -141,6 +141,7 @@ namespace CraigBot.Bot.Modules
             }
             
             var results = _pollService.CalculateResults();
+            var totalVotes = results.Count;
             
             var resultsText = "";
             
@@ -149,7 +150,10 @@ namespace CraigBot.Bot.Modules
                 for (var i = 0; i < results.Count; i++)
                 {
                     var key = results.ElementAt(i).Key;
-                    resultsText += $"• {_pollService.Current.Choices[key]} -- `{results.ElementAt(i).Value}`\n";
+                    var votes = results.ElementAt(i).Value;
+                    var percentageBar = PollHelpers.GeneratePercentageBar(votes, totalVotes);
+                    
+                    resultsText += $"• {_pollService.Current.Choices[key]}: `{percentageBar}`\n";
                 }
             }
             else

@@ -28,7 +28,6 @@ namespace CraigBot.Bot.Modules
         
         #region Commands
         
-        // TODO: This could be expanded upon
         [Command("bank")]
         [Summary("Provides the user with a bank statement.")]
         public async Task Bank()
@@ -92,7 +91,6 @@ namespace CraigBot.Bot.Modules
 
             await _bankingService.Deposit(account, amount);
             
-            // TODO: Should probably change these to use the InlineReply method
             await ReplyAsync($"Grant successful! {(user ?? Context.User).Mention} has been granted `{_options.Currency}{amount:N2}`");
         }
         
