@@ -70,7 +70,6 @@ namespace CraigBot.Bot.Services
                     $"Unmet precondition! Reason: `{await command.Value.CheckPreconditionsAsync(context)}`",
                 CommandError.MultipleMatches =>
                     $"Multiple matches! Multiple matches were found for `{_options.Prefix}{command.Value.Name}`, use `{_options.Prefix}help {command.Value.Name}` for info on specific differences",
-                // TODO: Could add the failed parse result here
                 CommandError.ParseFailed =>
                     $"Parsing failure! `{_options.Prefix}{command.Value.Name}` failed to parse, you likely used an incorrect parameter type. Use `{_options.Prefix}help {command.Value.Name}` for more info",
                 CommandError.Unsuccessful =>

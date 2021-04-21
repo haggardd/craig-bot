@@ -11,6 +11,22 @@ namespace CraigBot.Bot.Helpers
             => poll.Choices.ContainsKey(choice);
         
         public static bool IsActive(this Poll poll)
-            => poll != null && !poll.Ended;
+            => poll is {Ended: false};
+
+        public static string GeneratePercentageBar(int votes, int totalVotes)
+        {
+            var percentage = votes / totalVotes * 100;
+            var blockAmount = percentage / 10;
+            var bar = "";
+
+            for (var i = 0; i < 10; i++)
+            {
+                bar += i <= blockAmount 
+                    ? "█" 
+                    : "░";
+            }
+            
+            return bar;
+        }
     }
 }

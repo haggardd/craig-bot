@@ -125,7 +125,6 @@ namespace CraigBot.Bot.Services
             bet.HasEnded = true;
 
             await _betRepository.Update(bet);
-            // TODO: This will need testing
             await _wagerRepository.DeleteRange(wagers);
 
             return betResult;
