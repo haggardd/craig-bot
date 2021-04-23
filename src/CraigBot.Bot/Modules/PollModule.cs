@@ -132,7 +132,7 @@ namespace CraigBot.Bot.Modules
 
         #region Helpers
 
-        // TODO: Improve the way poll results are displayed
+        // TODO: Test percentage bars with my users
         private async Task EndPoll()
         {
             if (!_pollService.Current.IsActive())

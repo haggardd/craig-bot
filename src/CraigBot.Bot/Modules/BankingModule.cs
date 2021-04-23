@@ -130,7 +130,7 @@ namespace CraigBot.Bot.Modules
 
             var embed = BaseBankingEmbed()
                 .WithTitle("Stock Market")
-                .WithDescription($"The market updates every `{_options.MarketUpdateRate}` minutes. Use `{_options.Prefix}invest` to buy stocks.");
+                .WithDescription($"The market updates every `{_options.MarketUpdateRate}` minutes. Use `{_options.Prefix}buy` to buy stocks.");
 
             var stocksText = stocks.Aggregate("", (current, stock) 
                 => current + $"• {stock.ToFormattedString(_options.Currency)}\n");
