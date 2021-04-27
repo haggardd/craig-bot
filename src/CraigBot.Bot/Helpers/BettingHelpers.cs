@@ -10,7 +10,6 @@ namespace CraigBot.Bot.Helpers
             => Math.Round(wager * odds.Numerator / odds.Denominator, 2);
 
         public static string ToFormattedString(this Bet bet)
-            // TODO: Need to make sure text like this is consistent across the codebase
             => $"Bet ID: `{bet.Id}` |  Odds: `{bet.ForOdds} <> {bet.AgainstOdds}` | Creator: `{bet.Username}`";
 
         public static string ToFormattedString(this Wager wager, char currency)

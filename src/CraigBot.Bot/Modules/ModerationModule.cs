@@ -38,7 +38,7 @@ namespace CraigBot.Bot.Modules
         [PreventCraigMention]
         public async Task Warn([Summary("The user you wish to warn.")] SocketGuildUser user, 
             [Remainder][Summary("The reason for the warning.")] string reason)
-            => await ReplyAsync($"{user.Mention}, this is a warning! Reason: *{reason}*");
+            => await ReplyAsync($"{user.Mention}, this is a warning! Reason: `*{reason}*`");
 
         [Command("mute")]
         [Summary("Server mutes the given user.")]

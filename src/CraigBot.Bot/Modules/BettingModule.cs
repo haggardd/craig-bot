@@ -158,7 +158,7 @@ namespace CraigBot.Bot.Modules
             
             if (bet.UserId != Context.User.Id)
             {
-                await InlineReply(Context.Message, $"You can't end bets you didn't create");
+                await InlineReply(Context.Message, "You can't end bets you didn't create");
                 return;
             }
 

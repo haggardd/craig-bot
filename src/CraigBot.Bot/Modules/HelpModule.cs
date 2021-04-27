@@ -86,7 +86,7 @@ namespace CraigBot.Bot.Modules
                 {
                     if (string.IsNullOrWhiteSpace(embed.Description))
                     {
-                        embed.WithDescription("Key: `required` | *`optional`* | __`multiple`__");
+                        embed.WithDescription("Key: `required` / *`optional`* / __`multiple`__");
                     }
                     
                     var parameterInfo = "";

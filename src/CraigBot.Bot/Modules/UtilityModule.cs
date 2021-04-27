@@ -41,10 +41,10 @@ namespace CraigBot.Bot.Modules
                 ? "Unknown..."
                 : user.JoinedAt.Value.DateTime.ToString(CultureInfo.CurrentCulture);
 
-            var roles = string.Join(" | ", user.Roles.Select(r => $"`{r.Name}`"));
+            var roles = string.Join(" / ", user.Roles.Select(r => $"`{r.Name}`"));
 
             var embed = BaseUtilityEmbed()
-                .WithTitle($"{user.Nickname ?? user.Username} - `{user.Status}`")
+                .WithTitle($"{user.Nickname ?? user.Username} | Status: `{user.Status}`")
                 .WithThumbnailUrl(user.GetAvatarUrl())
                 .AddField("Joined", joined, true)
                 .AddField("Is bot?", $"`{user.IsBot.ToString().ToUpper()}`", true)
