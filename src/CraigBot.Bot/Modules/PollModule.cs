@@ -54,7 +54,7 @@ namespace CraigBot.Bot.Modules
                 .WithTitle(question)
                 .WithDescription($"Use `{_options.Prefix}vote` with choice number to cast your vote!")
                 .WithFooter(f => f.Text = $"Poll ends {duration} seconds from message sent")
-                .AddField("Choices: ", choicesText);
+                .AddField("Choices ", choicesText);
 
             await ReplyAsync("", false, embed.Build());
             
@@ -158,7 +158,7 @@ namespace CraigBot.Bot.Modules
             }
             else
             {
-                resultsText = "No votes were cast!";
+                resultsText = "No votes were cast";
             }
 
             var embed = BasePollEmbed()
