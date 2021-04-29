@@ -7,7 +7,6 @@ using CraigBot.Infrastructure.Database;
 
 namespace CraigBot.Infrastructure.Repositories
 {
-    // TODO: You should delete or filter old bets at the repo level 
     public class BetRepository : IBetRepository
     {
         public async Task<IEnumerable<Bet>> GetAll()
