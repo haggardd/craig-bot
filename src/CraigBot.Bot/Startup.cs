@@ -55,8 +55,7 @@ namespace CraigBot.Bot
         {
             var services = new ServiceCollection();
             
-            // TODO: Still need to look into the lifetime of the context, not sure it's correct
-            services.AddDbContext<CraigBotDbContext>(ServiceLifetime.Transient);
+            services.AddDbContext<CraigBotDbContext>();
 
             services.AddHttpClient<IImageService, ImageService>();
             

@@ -11,7 +11,6 @@ namespace CraigBot.Infrastructure.Database
 {
     public static class DbInitialiser
     {
-        // TODO: Don't initialise tables if their module is disabled
         public static async Task Initialise(CraigBotDbContext context)
         {
             await context.Database.EnsureCreatedAsync();
