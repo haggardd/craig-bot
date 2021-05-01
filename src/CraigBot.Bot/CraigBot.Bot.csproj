@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RuntimeIdentifier>linux-arm</RuntimeIdentifier>
+        <RuntimeIdentifiers>linux-arm; win-x64</RuntimeIdentifiers>
     </PropertyGroup>
 
     <ItemGroup>
