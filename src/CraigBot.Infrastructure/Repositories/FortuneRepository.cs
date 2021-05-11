@@ -9,7 +9,8 @@ namespace CraigBot.Infrastructure.Repositories
 {
     public class FortuneRepository : IFortuneRepository
     {
-        // TODO: Could probably store these on first fetch
+        // TODO: Could probably cache these on first fetch
+        // https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-5.0
         public async Task<IEnumerable<Fortune>> GetAll()
         {
             await using var context = new CraigBotDbContext();

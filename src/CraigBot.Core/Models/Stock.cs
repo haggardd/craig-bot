@@ -18,6 +18,7 @@ namespace CraigBot.Core.Models
         
         // TODO: This could be moved to a config as a single value, read on startup and updated when needed
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-5.0#options-interfaces
+        // https://www.quartz-scheduler.net/
         public DateTime LastUpdate { get; set; }
     }
 }

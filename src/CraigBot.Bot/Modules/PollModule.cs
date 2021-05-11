@@ -131,8 +131,7 @@ namespace CraigBot.Bot.Modules
         #endregion
 
         #region Helpers
-
-        // TODO: Test percentage bars with my users
+        
         private async Task EndPoll()
         {
             if (!_pollService.Current.IsActive())

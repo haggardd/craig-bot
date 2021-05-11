@@ -15,13 +15,13 @@ namespace CraigBot.Bot.Helpers
 
         public static string GeneratePercentageBar(int votes, int totalVotes)
         {
-            var percentage = votes / totalVotes * 100;
+            var percentage = (decimal) votes / totalVotes * 100;
             var blockAmount = percentage / 10;
             var bar = "";
 
             for (var i = 0; i < 10; i++)
             {
-                bar += i <= blockAmount 
+                bar += i < blockAmount 
                     ? "█" 
                     : "░";
             }
